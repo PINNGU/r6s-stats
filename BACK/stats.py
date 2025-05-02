@@ -1,5 +1,5 @@
 from scraper import scraper_player,scraper_mates
-from optimizator import get_best_ops
+from optimizator import get_best_ops,get_icons
 from bs4 import BeautifulSoup as bs
 
 
@@ -52,11 +52,9 @@ operator_side_dict = {
 
 
 
-    # missing but not needed
     "Alibi": "def",
     "Aruni": "def",
     "Bandit": "def",
-    "Castle": "def",
     "Clash": "def",
     "Doc": "def",
     "Echo": "def",
@@ -80,7 +78,20 @@ operator_side_dict = {
     "Smoke": "def",
     "Castle": "def",
     "Thorn": "def",
-    "Jäger": "def"
+    "Jäger": "def",
+    "Skopós" : "def",
+    "Sentry" : "def",
+    "Tubarão" : "def",
+    "Fenrir" : "def",
+    "Solis" : "def",
+    "Azami" : "def",
+    "Thunderbird" : "def",
+    "Mozzie": "def",
+    "Vigil" : "def",
+    "Ela" : "def",
+    "Caveira" : "def",
+    
+
 }
 
 PLAYER = {
@@ -90,7 +101,9 @@ PLAYER = {
             "Win":0.0,
             "KDA":0.0,
             "Atk":["",""],
-            "Def":["",""] 
+            "Def":["",""],
+            "AtkImg":[],
+            "DefImg" :[] 
         }
 
 OP = {
@@ -132,6 +145,7 @@ def get_player():
 
 
 def get_ops_values(soup):
+    OPS.clear()
     rows = soup.find_all("div",class_="trow stat-table-row")
     counter = 0
     for row in rows:
@@ -183,7 +197,8 @@ def get_teammates(player):
             counter = counter + 1
         else:
             break
-    print(MATES)
+
+    return MATES
 
 
 
@@ -229,6 +244,10 @@ def get_all_stats(player):
     atk,df = get_best_ops(OPS)
     PLAYER["Atk"] = atk
     PLAYER['Def'] = df
+    atk,df = get_icons(atk,df)
+    PLAYER["AtkImg"] = atk
+    PLAYER["DefImg"] = df
+
     return PLAYER
 
 

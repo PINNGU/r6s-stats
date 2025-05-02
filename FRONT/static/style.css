@@ -1,0 +1,115 @@
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    background-color: #1c1c1c;
+    color: #e0e0e0;
+    overflow: hidden;
+    height: 100%;
+}
+
+.layout-main {
+    display: grid;
+    grid-template-columns: 3fr 6fr 3fr;
+    height: 900px;
+  }
+
+  .side {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+  }
+  
+  .left-side {
+    background-image: url('pics/floresimg.png'); 
+    margin-left:-100px ;
+    margin-top: 50px;
+  }
+  
+  .right-side {
+    background-image: url('pics/valkpic.png'); 
+    width: 500px;
+    margin-top: 60px;
+    transform: translateX(50px);
+    
+  }
+
+.layout-mates{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    height: 50vh;
+}
+
+
+.ranks {
+    border: 2px solid transparent;
+    border-radius: 5px; 
+    padding: 15px; 
+    margin-top:8px;
+    box-shadow: 0 4px 8px transparent; 
+    background-color: transparent; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    width: 325px;
+    justify-self: center;
+    font-size: clamp(12px, 2vw, 21px);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.ranks:not(:empty) {
+    border:#333333;
+    box-shadow:rgba(0, 0, 0, 0.4);
+    background-color: #2e2e2e;
+}
+
+
+
+  
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.main h1{
+    font-size:50px;
+
+}
+
+.main img{
+    width:90px;
+    height:90px;
+    
+
+}
+
+.main button,input{
+    padding: 10px 20px;
+    border: 2px solid #333333;
+    background-color: #555555;
+    color: #e0e0e0;
+    font-family: inherit;
+    border-radius: 4px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.main input::placeholder {
+    color: #aaaaaa;
+}
+
+.main button:hover {
+    background-color: #888888;
+    border-color: #666666;
+    cursor: pointer;
+}
+
+    
+

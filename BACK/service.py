@@ -10,4 +10,4 @@ class Service:
         return get_all_stats(name)
     
     def get_teammates(self,name):
-        get_teammates(name)
+        return get_teammates(name)

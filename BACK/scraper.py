@@ -42,7 +42,7 @@ def scraper_ops(url):
     driver = webdriver.Chrome(service=service,options=options)
 
     driver.get(url)
-    time.sleep(1)
+    time.sleep(2)
     soup_ops = bs(driver.page_source,"html.parser")
     driver.quit()
  

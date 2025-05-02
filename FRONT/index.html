@@ -3,17 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R6 Stats</title>
+    <title class="main" style="color: blue;">r6me | Stats and Strats</title>
     <script src="static/main.js" defer></script>
+    <link rel="stylesheet" href="static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <h1>R6 Stats</h1>
+    <div class ="layout-main">
+        <div class="side left-side"></div>
 
-    <label for="playerName">Enter Player Name:</label>
-    <input type="text" id="playerName" name="playerName">
-    <button id="getStatsBtn">Get Stats</button>
+        <div>
+            <h1 class="main">r6me</h1>
 
-    <div id="stats"></div>
-    <div id="mates"></div>
+            <div class="main">
+                <input type="text" id="playerName" name="playerName" class="main" placeholder="Enter Ubisoft Name:">
+                <button id="getStatsBtn" class="main">Get Stats</button>
+            </div>
+        
+            <div id="stats_title" class="main"></div>
+            <div id="stats_rank"  class="ranks"></div>
+            <div id="stats_kd" class="main"></div>
+            <div id="stats_ops" class="main"></div>
+            
+
+            <div class="layout-mates">
+                <div id="stats_mate1" class="main"></div>
+                <div id="stats_mate2" class="main"></div>
+                <div id="stats_mate3" class="main"></div>
+                <div id="stats_mate4" class="main"></div>
+
+            </div>
+
+        </div>
+
+        <div class="side right-side"></div>
+    </div>
+
+
 </body>
 </html>
+
