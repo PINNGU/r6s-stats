@@ -13,7 +13,7 @@ operator_side_dict = {
     "Blackbeard": "atk",
     "Blitz": "atk",
     "Buck": "atk",
-    "Capitao": "atk",
+    "Capitão": "atk",
     "Finka": "atk",
     "Glaz": "atk",
     "Iana": "atk",
@@ -21,7 +21,7 @@ operator_side_dict = {
     "Lion": "atk",
     "Maverick": "atk",
     "Montagne": "atk",
-    "Nokk": "atk",
+    "NØkk": "atk",
     "Nomad": "atk",
     "Sledge": "atk",
     "Twitch": "atk",
@@ -40,7 +40,6 @@ operator_side_dict = {
     "Flores":"atk",
     "Kali":"atk",
     "Amaru":"atk",
-    "Nøkk":"atk",
     "Gridlock":"atk",
     "Dokkaebi":"atk",
     "Ying": "atk",
@@ -97,11 +96,14 @@ operator_side_dict = {
 PLAYER = {
             "Name":"",
             "Rank":"",
+            "RankColor":"",
             "RankImg":"",
             "Win":0.0,
             "KDA":0.0,
-            "Atk":["",""],
-            "Def":["",""],
+            "Matches":0,
+            "Kills/Game":0.0,
+            "Atk":["","",""],
+            "Def":["","",""],
             "AtkImg":[],
             "DefImg" :[] 
         }
@@ -118,21 +120,25 @@ MATES = [
     {
         "Name":"",
         "Rank":"",
+        "RankColor":"",
         "Win":0.0
     },
     {
         "Name":"",
         "Rank":"",
+        "RankColor":"",
         "Win":0.0
     },
     {
         "Name":"",
         "Rank":"",
+        "RankColor":"",
         "Win":0.0
     },
     {
         "Name":"",
         "Rank":"",
+        "RankColor":"",
         "Win":0.0
     },
 
@@ -194,6 +200,10 @@ def get_teammates(player):
             MATES[counter]["Win"] = winrate
             MATES[counter]["Rank"] = image
 
+            for k in r6_ranks:
+                if k.lower() in MATES[counter]["Rank"].lower():
+                    MATES[counter]["RankColor"] = k.lower()
+
             counter = counter + 1
         else:
             break
@@ -229,6 +239,18 @@ def get_all_stats(player):
                     kd_val = kd.find("span").text.strip()
                     PLAYER["KDA"] = kd_val
 
+            elif "matches" in stat.next.lower():
+                matches = stat.find_next("span",class_="stat-value stat-value--text")
+                if matches:
+                    matches = matches.find("span").text.strip()
+                    PLAYER["Matches"] = matches
+
+            elif "kills/game" in stat.next.lower():
+                kills = stat.find_next("span",class_="stat-value stat-value--text")
+                if kills:
+                    kills = kills.find("span").text.strip()
+                    PLAYER["Kills/Game"] = kills
+            
 
         stats = section.find_all("span")
 
@@ -236,7 +258,8 @@ def get_all_stats(player):
                 for k in r6_ranks:
                     
                     if k in stat.text:
-                        PLAYER["Rank"] = stat.text  
+                        PLAYER["Rank"] = stat.text
+                        PLAYER["RankColor"] = k.lower()
                     
     
     get_ops_values(soup_ops)

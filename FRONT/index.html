@@ -7,6 +7,10 @@
     <script src="static/main.js" defer></script>
     <link rel="stylesheet" href="static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="static/pics/r6icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Share+Tech+Mono&family=Teko:wght@300..700&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -20,20 +24,58 @@
                 <input type="text" id="playerName" name="playerName" class="main" placeholder="Enter Ubisoft Name:">
                 <button id="getStatsBtn" class="main">Get Stats</button>
             </div>
+            
+            <div class="border-top"></div>
         
             <div id="stats_title" class="main"></div>
-            <div id="stats_rank"  class="ranks"></div>
-            <div id="stats_kd" class="main"></div>
-            <div id="stats_ops" class="main"></div>
+            <div class="main">
+                <div class="layout-stats">
+                    <div>
+                        <div id="stats_kd" class="stats"></div>
+                        <div id ="stats_kills" class="stats"></div>
+                    </div>
+    
+                        <div>
+                            <div id="stats_rank"  class="ranks"></div>
+                        </div>
+                    <div>
+                        <div id="stats_wr" class="stats"></div>
+                        <div id="stats_match" class="stats"></div>
+                    </div>
+                </div>
+            </div>
+     
+
+            <div id="stats_ops" class="ops"></div>
+            
+            <div class="boxwrapper">
+                <fieldset class="stackbox">
+                    
+                    <legend>
+                        <div id="mates_title" class="main"></div>
+                    </legend>
+                    <div class="layout-mates">
+                        <div id="stats_mate1" class="mate"></div>
+                        <div id="stats_mate2" class="mate"></div>
+                        <div id="stats_mate3" class="mate"></div>
+                        <div id="stats_mate4" class="mate"></div>
+        
+                    </div>
+                </fieldset>
+            </div>
+        
             
 
-            <div class="layout-mates">
-                <div id="stats_mate1" class="main"></div>
-                <div id="stats_mate2" class="main"></div>
-                <div id="stats_mate3" class="main"></div>
-                <div id="stats_mate4" class="main"></div>
-
+            <div>
+                <div id="vids" class="layout-mates">
+                    <div id="vid1"></div>
+                    <div id="vid2"></div>
+                    <div id="vid3"></div>
+                    <div id="vid4"></div>
+    
+                </div>
             </div>
+  
 
         </div>
 

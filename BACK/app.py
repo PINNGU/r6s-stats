@@ -13,6 +13,20 @@ def serve_index():
 def serve_static_files(path):
     return send_from_directory('../FRONT', path)
 
+@app.route('/api/vids',methods=['GET'])
+def get_vids():
+    try:
+        vids = service.get_all_vids()
+    
+        return jsonify(
+            {
+                "vids":vids
+            }
+        )
+                          
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/stats', methods=['GET'])
 def get_player():
     name = request.args.get('name')
@@ -25,12 +39,19 @@ def get_player():
         return jsonify({
             "rank": stats["Rank"],
             "kd": stats["KDA"],
+            "rankcolor" : stats["RankColor"],
             "rank_img" : stats["RankImg"],
             "win" : stats["Win"],
             "atk1" : stats["Atk"][0],
-            "def" : stats["Def"],
+            "atk2": stats["Atk"][1],
+            "atk3":stats["Atk"][2],
+            "def1" : stats["Def"][0],
+            "def2":stats["Def"][1],
+            "def3":stats["Def"][2],
             "atkimg":stats["AtkImg"],
-            "defimg" : stats["DefImg"]
+            "defimg" : stats["DefImg"],
+            "kills":stats["Kills/Game"],
+            "matches":stats["Matches"]
                         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
