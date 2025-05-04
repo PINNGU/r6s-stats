@@ -35,18 +35,56 @@ def scraper_player(name):
 
     return soup_basic, scraper_ops(url_operators)
 
-def scraper_ops(url):
-    options = Options()
-    
-    service = Service("BACK/chromedriver.exe")
-    driver = webdriver.Chrome(service=service,options=options)
+def scraper_matches(player):
+    url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/matches?playlist=ranked"
 
-    driver.get(url)
-    time.sleep(2)
-    soup_ops = bs(driver.page_source,"html.parser")
-    driver.quit()
+   
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True   ) 
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            viewport={'width': 1280, 'height': 800},
+            java_script_enabled=True
+        )
+
+        
+        page = context.new_page()
+
+        page.goto(url)
+        page.wait_for_timeout(8500)
+        content_overview = page.content()
+        soup = bs(content_overview, "html.parser")
+
+
+        browser.close()
+
  
-    return soup_ops
+
+    return soup
+
+
+def scraper_ops(url):
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True) 
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            viewport={'width': 1280, 'height': 800},
+            java_script_enabled=True
+        )
+
+        page = context.new_page()
+
+        page.goto(url)
+        page.wait_for_timeout(3000)
+        soup = bs(page.content(),"html.parser")
+
+        browser.close()
+
+    return soup
+
 
 def scraper_mates(player):
 

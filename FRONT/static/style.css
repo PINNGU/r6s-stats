@@ -10,6 +10,21 @@ body {
     height: 100%;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4; 
+    z-index: -1; 
+    pointer-events: none; 
+}
+
 .layout-main {
     display: grid;
     grid-template-columns: 3fr 6fr 3fr;
@@ -21,13 +36,27 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     size-adjust: 0;
+    flex-shrink: 0;
     
+  }
+  .loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loading img{
+    width:60px;
+    height:60px;
+    opacity: 0.8;
+
   }
   
   .left-side {
     background-image: url('pics/floresimg.png'); 
     margin-left:-100px ;
     margin-top: 50px;
+    flex-shrink: 0;
   }
   
   .right-side {
@@ -35,7 +64,7 @@ body {
     width: 500px;
     margin-top: 60px;
     transform: translateX(50px);
-    
+    flex-shrink: 0;
   }
 
 
@@ -85,6 +114,31 @@ body {
     padding-left:-60px ;
 }
 
+.stats2 {
+    border: 2px solid transparent;
+    border-radius: 3px; 
+    margin-bottom:4px;
+    box-shadow: 0 4px 8px transparent; 
+    background-color: transparent; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    width: 352px;
+    font-size: clamp(12px, 2vw, 18px);
+    white-space: nowrap;
+    overflow: hidden;
+    height: 56px;
+    
+}
+
+.stats2:not(:empty) {
+    border:#333333;
+    box-shadow:rgba(0, 0, 0, 0.4);
+    background-color: #2e2e2e;
+}
+
+
 .stats:not(:empty) {
     color: #e0e0e0;
     box-shadow:rgba(71, 149, 173, 0.301);
@@ -94,6 +148,14 @@ body {
 .layout-stats{
     display: grid;
     grid-template-columns: auto min-content auto;
+    column-gap: 10px;
+    margin-top: 10px;
+    
+}
+
+.layout-stats2{
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr;
     column-gap: 10px;
     margin-top: 10px;
     
@@ -129,7 +191,6 @@ body {
     
 }
 
-
 .mate{
     display: flex;
     flex-direction: column; 
@@ -160,7 +221,6 @@ body {
     width:90px;
     height:90px;
     
-
 }
 
 .main input{
@@ -198,21 +258,24 @@ body {
 
 .stackbox{
     border: none;
-    padding: 10px 15px;
+    padding: 10px 10px;
     border-radius: none;
     display: inline-block;
     justify-content: center;
     align-items: center;
     justify-self: center;
- 
+    min-width: 700px;
+    opacity: 1.5;
 }
 
 .boxwrapper {
     display: flex;
+    justify-self: center ;
     justify-content: center; 
     height: 150px;
-    margin-top: 20px;
-    margin-bottom: 50px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    min-width: 700x;
 }
 
 
@@ -224,7 +287,7 @@ body {
 
 .stackbox legend{
     text-align: center;
-    width: 20%;
+    width: 12%;
 }
 
 .stackbox:has(legend):has(p, span) {
@@ -236,8 +299,80 @@ body {
 .bronze { color: #574325; }
 .silver { color: #737b7e; }
 .gold { color: #ffc400; }
-.platinum { color: #4f9da6; }
+.platinum { color: #29cadb; }
 .emerald { color: #16c04e; }
-.diamond { color: #0ec8f1; }
+.diamond { color: #022c9e; }
 .champion { color: #ff4f79 }
 
+
+.matches{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.matches_title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 40px;
+}
+
+.matchbox{
+    border: none;
+    padding: 5px 5px;
+    border-radius: none;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    min-width: 700px;
+}
+
+
+.matchbox legend{
+    text-align: center;
+    width: 30%;
+}
+
+.matchbox:has(legend):has(p, span) {
+    border: 2px solid 	#7f8c8d ;
+    border-radius: 8px;
+  }
+
+
+
+.win {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    color: rgba(117, 243, 117, 0.555);
+    font-weight: bold;
+    margin: 5px;
+    font-size:35px;
+}
+.loss {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    color: rgba(235, 105, 105, 0.74);
+    font-weight: bold;
+    margin: 5px;
+    font-size:35px;
+
+
+}
+.remake {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    color: rgb(247, 230, 133);
+    font-weight: bold;
+    margin: 5px;
+    font-size:35px;
+
+}

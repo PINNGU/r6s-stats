@@ -1,4 +1,4 @@
-from scraper import scraper_player,scraper_mates
+from scraper import scraper_player,scraper_mates,scraper_matches
 from optimizator import get_best_ops,get_icons
 from bs4 import BeautifulSoup as bs
 
@@ -21,7 +21,7 @@ operator_side_dict = {
     "Lion": "atk",
     "Maverick": "atk",
     "Montagne": "atk",
-    "NØkk": "atk",
+    "Nøkk": "atk",
     "Nomad": "atk",
     "Sledge": "atk",
     "Twitch": "atk",
@@ -93,20 +93,7 @@ operator_side_dict = {
 
 }
 
-PLAYER = {
-            "Name":"",
-            "Rank":"",
-            "RankColor":"",
-            "RankImg":"",
-            "Win":0.0,
-            "KDA":0.0,
-            "Matches":0,
-            "Kills/Game":0.0,
-            "Atk":["","",""],
-            "Def":["","",""],
-            "AtkImg":[],
-            "DefImg" :[] 
-        }
+
 
 OP = {
     "Name":"",
@@ -116,38 +103,31 @@ OP = {
 
 OPS = []
 
-MATES = [
-    {
-        "Name":"",
-        "Rank":"",
-        "RankColor":"",
-        "Win":0.0
-    },
-    {
-        "Name":"",
-        "Rank":"",
-        "RankColor":"",
-        "Win":0.0
-    },
-    {
-        "Name":"",
-        "Rank":"",
-        "RankColor":"",
-        "Win":0.0
-    },
-    {
-        "Name":"",
-        "Rank":"",
-        "RankColor":"",
-        "Win":0.0
-    },
-
-]
 
 
 
 def get_player():
     pass
+
+
+def get_matches(player):
+    soup = scraper_matches(player)
+    body = soup.find('body')
+    divs = body.find_all('div',class_="match-row")
+    #matchdivs = divs.find_all('div',class_="match-row")
+    matches = []
+    for div in divs:
+        classes = div.get('class',[])
+        if any('match-row--loss' in cls for cls in classes):
+            matches.append("L")
+        elif any('match-row--win' in cls for cls in classes):
+            matches.append("W")
+        elif any('match-row--rollback' in cls for cls in classes):
+            matches.append("R")
+    
+
+    return matches[:15]
+
 
 
 def get_ops_values(soup):
@@ -182,7 +162,36 @@ def get_ops_side():
         else:
             op["Side"] = "def"
 
+
+
 def get_teammates(player):
+    MATES = [
+    {
+        "Name":"",
+        "Rank":"",
+        "RankColor":"",
+        "Win":None
+    },
+    {
+        "Name":"",
+        "Rank":"",
+        "RankColor":"",
+        "Win":None
+    },
+    {
+        "Name":"",
+        "Rank":"",
+        "RankColor":"",
+        "Win":None
+    },
+    {
+        "Name":"",
+        "Rank":"",
+        "RankColor":"",
+        "Win":None
+    },
+
+    ]
     soup = scraper_mates(player)
 
     sections = soup.find_all("div",class_="trow stat-table-row")
@@ -196,30 +205,58 @@ def get_teammates(player):
             winrate = float(winrate)
             image = cols[4].get_text(strip=True)
 
-            MATES[counter]["Name"] = name
-            MATES[counter]["Win"] = winrate
-            MATES[counter]["Rank"] = image
+            if name:
+                MATES[counter]["Name"] = name
+            if winrate:
+                MATES[counter]["Win"] = str(winrate) + "% WR"
+            if image:
+                MATES[counter]["Rank"] = image
 
-            for k in r6_ranks:
-                if k.lower() in MATES[counter]["Rank"].lower():
-                    MATES[counter]["RankColor"] = k.lower()
+                for k in r6_ranks:
+                    if k.lower() in MATES[counter]["Rank"].lower():
+                        MATES[counter]["RankColor"] = k.lower()
 
             counter = counter + 1
         else:
             break
 
+    print(MATES)
     return MATES
 
 
 
 
 def get_all_stats(player):
+    PLAYER = {
+            "Name":"",
+            "Rank":"",
+            "RankColor":"",
+            "RankImg":"",
+            "MMR":0.0,
+            "Win":0.0,
+            "KDA":0.0,
+            "Matches":0,
+            "Kills/Game":0.0,
+            "Atk":["","",""],
+            "Def":["","",""],
+            "Playtime":0.0,
+            "History":[],
+            "AtkImg":[],
+            "DefImg" :[] 
+        }
     PLAYER["Name"] = player
     soup_basic,soup_ops = scraper_player(player)
 
     rank_image = soup_basic.select_one('img.rank-image')
     PLAYER["RankImg"] = rank_image['src']
 
+    #sections = soup_basic.find_all("section",class_="overview")
+    #for section in sections:
+      #  spans = section.find_all("span")
+      #  for span in spans:
+         #   if "Playtime" in span:
+        #        pt = span.find_previous("span")
+            #    PLAYER["Playtime"] = pt
 
 
     sections = soup_basic.find_all("section",class_="season-overview")
@@ -258,9 +295,13 @@ def get_all_stats(player):
                 for k in r6_ranks:
                     
                     if k in stat.text:
+                        mmr = stat.find_next("span").text.strip()
+                        mmr = mmr.replace("RP","")
+                        print(mmr)
+                        PLAYER["MMR"] = mmr
                         PLAYER["Rank"] = stat.text
                         PLAYER["RankColor"] = k.lower()
-                    
+              
     
     get_ops_values(soup_ops)
     get_ops_side()

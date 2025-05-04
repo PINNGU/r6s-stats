@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="main" style="color: blue;">r6me | Stats and Strats</title>
+    <title class="main" style="color: blue;">r6me | Stats and Stacks</title>
     <script src="static/main.js" defer></script>
     <link rel="stylesheet" href="static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="static/pics/r6icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Share+Tech+Mono&family=Teko:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 
 </head>
 <body>
     <div class ="layout-main">
-        <div class="side left-side"></div>
+        <div></div>
+        <!--<div class="side left-side"></div>-->
 
         <div>
             <h1 class="main">r6me</h1>
@@ -27,7 +29,9 @@
             
             <div class="border-top"></div>
         
+            
             <div id="stats_title" class="main"></div>
+            <div id="loading" class="loading"></div>
             <div class="main">
                 <div class="layout-stats">
                     <div>
@@ -43,10 +47,30 @@
                         <div id="stats_match" class="stats"></div>
                     </div>
                 </div>
+
+ 
             </div>
      
+            <div>
+                <div class="layout-stats2">
+                    <div></div>
+                    <div id="stats_k" class="stats2"></div>
+                    <div id ="stats_k2" class="stats2"></div>
+                    <div></div>
+                </div>
+            </div>
 
             <div id="stats_ops" class="ops"></div>
+
+            <div class="boxwrapper">
+                <fieldset class="matchbox">
+                    <legend>
+                        <div id="matches_title" class="main"></div>
+                    </legend>
+                    <div id="matches" class="matches"></div>
+                </fieldset>
+            </div>
+            
             
             <div class="boxwrapper">
                 <fieldset class="stackbox">
@@ -79,7 +103,8 @@
 
         </div>
 
-        <div class="side right-side"></div>
+        <div></div>
+        <!--<div class="side right-side"></div>-->
     </div>
 
 

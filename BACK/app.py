@@ -13,6 +13,23 @@ def serve_index():
 def serve_static_files(path):
     return send_from_directory('../FRONT', path)
 
+@app.route('/api/matches',methods=['GET'])
+def get_matches():
+    name = request.args.get('name')
+    if not name:
+        return jsonify({"error": "Player name is required"}), 400
+    else:
+        try:
+            matches = service.get_matches(name)
+
+            return jsonify(
+                {
+                    "matches":matches
+                }
+            )
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
 @app.route('/api/vids',methods=['GET'])
 def get_vids():
     try:
@@ -51,7 +68,9 @@ def get_player():
             "atkimg":stats["AtkImg"],
             "defimg" : stats["DefImg"],
             "kills":stats["Kills/Game"],
-            "matches":stats["Matches"]
+            "matches":stats["Matches"],
+            "mmr":stats["MMR"],
+            "playtime":stats["Playtime"]
                         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
