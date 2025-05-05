@@ -4,7 +4,7 @@ html {
 }
 
 body {
-    background-color: #1c1c1c;
+    background-color: #1f1e1e;
     color: #e0e0e0;
     overflow: hidden;
     height: 100%;
@@ -296,9 +296,9 @@ body::before {
   }
 
 .copper { color: #c04a1b; }
-.bronze { color: #574325; }
-.silver { color: #737b7e; }
-.gold { color: #ffc400; }
+.bronze { color: #bb955c; }
+.silver { color: #b9bec2; }
+.gold { color: #ffc917; }
 .platinum { color: #29cadb; }
 .emerald { color: #16c04e; }
 .diamond { color: #022c9e; }
@@ -309,6 +309,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: -2%;
 }
 
 .matches_title{
@@ -328,6 +329,7 @@ body::before {
     align-items: center;
     justify-self: center;
     min-width: 700px;
+    max-width: 720px;
 }
 
 
@@ -345,34 +347,110 @@ body::before {
 
 .win {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: 'Orbitron', sans-serif;
     color: rgba(117, 243, 117, 0.555);
     font-weight: bold;
     margin: 5px;
-    font-size:35px;
+    font-size:34px;
 }
 .loss {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: 'Orbitron', sans-serif;
     color: rgba(235, 105, 105, 0.74);
     font-weight: bold;
     margin: 5px;
-    font-size:35px;
+    font-size:34px;
 
 
 }
 .remake {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: 'Orbitron', sans-serif;
     color: rgb(247, 230, 133);
     font-weight: bold;
     margin: 5px;
-    font-size:35px;
+    font-size:34px;
 
+}
+
+.win small {
+    display: block;
+    font-size: 12px;
+    color: rgba(117, 243, 117, 0.7);
+    margin-top: 2px;
+}
+
+.loss small {
+    display: block;
+    font-size: 12px;
+    color: rgba(235, 105, 105, 0.7);
+    margin-top: 2px;
+}
+
+.remake small {
+    display: block;
+    font-size: 12px;
+    color: rgba(247, 230, 133, 0.7);
+    margin-top: 2px;
+}
+
+.ssbutton{
+    background-image: url('pics/image.svg');
+    background-size: cover;
+    background-color:transparent;
+    display: inline-block;
+ 
+
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor:pointer;
+}
+
+
+.sharebutton{
+    background-image: url('pics/share.svg');
+    background-size: cover;
+    background-color:transparent;
+    
+    display: inline-block;
+
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+}
+
+.infobutton{
+    background-image: url('pics/info.svg');
+    background-size: cover;
+    background-color:transparent;
+    display: inline-block;
+
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor:pointer;
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 3%;
+    left: 45%;
+    
+}
+.buttons *{
+    margin: 5px;
+    opacity: 0.85;
 }

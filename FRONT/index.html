@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title class="main" style="color: blue;">r6me | Stats and Stacks</title>
     <script src="static/main.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" href="static/pics/r6icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,11 +17,11 @@
 
 </head>
 <body>
-    <div class ="layout-main">
+    <div class ="layout-main" >
         <div></div>
         <!--<div class="side left-side"></div>-->
 
-        <div>
+        <div id="allstats">
             <h1 class="main">r6me</h1>
 
             <div class="main">
@@ -100,11 +102,28 @@
                 </div>
             </div>
   
+                <div class="buttons" id ="buttons">
+
+                    <button id="screenshotButton" class="ssbutton">
+                
+                    </button>
+                    <button  class="sharebutton">
+    
+                    </button>
+                    <button class="infobutton">
+
+                    </button>
+                </div>
+               
+                
+             
+          
 
         </div>
 
         <div></div>
         <!--<div class="side right-side"></div>-->
+        
     </div>
 
 

@@ -26,7 +26,7 @@ def scraper_player(name):
         page = context.new_page()
 
         page.goto(url_overview)
-        page.wait_for_timeout(1000)
+        page.wait_for_timeout(3000)
         content_overview = page.content()
         soup_basic = bs(content_overview, "html.parser")
 
@@ -78,7 +78,7 @@ def scraper_ops(url):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(4000)
         soup = bs(page.content(),"html.parser")
 
         browser.close()

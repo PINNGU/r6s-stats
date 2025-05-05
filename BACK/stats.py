@@ -1,5 +1,5 @@
 from scraper import scraper_player,scraper_mates,scraper_matches
-from optimizator import get_best_ops,get_icons
+from optimizator import get_best_ops,get_icons,get_rank_image
 from bs4 import BeautifulSoup as bs
 
 
@@ -114,9 +114,15 @@ def get_matches(player):
     soup = scraper_matches(player)
     body = soup.find('body')
     divs = body.find_all('div',class_="match-row")
-    #matchdivs = divs.find_all('div',class_="match-row")
+
+    matches_mmr = []
     matches = []
     for div in divs:
+        matchstats = div.find_all("span")
+        for match in matchstats:
+            if "+" in match.text or "-" in match.text:
+                matches_mmr.append(match.text)
+
         classes = div.get('class',[])
         if any('match-row--loss' in cls for cls in classes):
             matches.append("L")
@@ -125,8 +131,8 @@ def get_matches(player):
         elif any('match-row--rollback' in cls for cls in classes):
             matches.append("R")
     
-
-    return matches[:15]
+    
+    return matches[:15],matches_mmr[:15]
 
 
 
@@ -240,7 +246,6 @@ def get_all_stats(player):
             "Atk":["","",""],
             "Def":["","",""],
             "Playtime":0.0,
-            "History":[],
             "AtkImg":[],
             "DefImg" :[] 
         }
@@ -248,15 +253,16 @@ def get_all_stats(player):
     soup_basic,soup_ops = scraper_player(player)
 
     rank_image = soup_basic.select_one('img.rank-image')
-    PLAYER["RankImg"] = rank_image['src']
+    print(rank_image['src'])
+    PLAYER["RankImg"] = get_rank_image(rank_image['src'])
 
-    #sections = soup_basic.find_all("section",class_="overview")
-    #for section in sections:
-      #  spans = section.find_all("span")
-      #  for span in spans:
-         #   if "Playtime" in span:
-        #        pt = span.find_previous("span")
-            #    PLAYER["Playtime"] = pt
+    sections = soup_basic.find_all("section",class_="overview")
+    for section in sections:
+        spans = section.find_all("span")
+        for span in spans:
+           if "playtime" in span.text.lower():
+                pt = span.find_next("span")
+                PLAYER["Playtime"] = pt.text
 
 
     sections = soup_basic.find_all("section",class_="season-overview")

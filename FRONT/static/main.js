@@ -5,12 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerName = params.get('player');
 
     if (playerName) {
-        
+        document.getElementById('playerName').value = playerName
         getEverything(playerName);
+
     }
 
     const images = [
-        'static/pics/yacht.jpg',
+        'static/pics/hereford.jpg',
         'static/pics/villa.jpg',
         'static/pics/plane.jpg',
         'static/pics/house.jpg',
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body::before {
             content: "";
             position: fixed;
+            background-color: #1c1c1c;
             top: 0;
             left: 0;
             width: 100%;
@@ -38,6 +40,48 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(bodyBefore);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const screenshotButton = document.getElementById('screenshotButton');
+
+   
+    const rankImg = document.querySelector('#stats_rank img');
+    if (rankImg && !rankImg.complete) {
+        screenshotButton.disabled = true;  
+
+        rankImg.addEventListener('load', () => {
+            screenshotButton.disabled = false;
+        });
+    }
+
+    screenshotButton.addEventListener('click', () => {
+        html2canvas(document.body, { useCORS: true }).then(canvas => {
+
+            const cropX = 590;    
+            const cropY = 20;   
+            const cropWidth = 745; 
+            const cropHeight = 850; 
+
+            const croppedCanvas = document.createElement('canvas');
+            croppedCanvas.width = cropWidth;
+            croppedCanvas.height = cropHeight;
+
+            const ctx = croppedCanvas.getContext('2d');
+            ctx.drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+            croppedCanvas.toBlob(blob => {
+                navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]).then(() => {
+                    alert('Copied screenshot to clipboard.');
+                }).catch(err => {
+                    console.error('Failed to copy image to clipboard:', err);
+                });
+            });
+        });
+    });
+});
+
 
 function getEverything(playerName)
 {
@@ -76,9 +120,13 @@ async function getMatches(playerName){
         `
             <h1>match history</h1>
         `;
+
         let html = '';
 
-        data.matches.forEach(match => {
+        for (let i = 0; i < data.matches.length; i++) {
+            const match = data.matches[i];
+            const mmr = data.matches_mmr[i];
+
             let className = '';
             if (match === 'W') {    
                 className = 'win';
@@ -88,11 +136,11 @@ async function getMatches(playerName){
                 className = 'remake';
             }
 
-            html += `<span class="${className}">${match}</span> `;
-            });
 
-        document.getElementById('matches').innerHTML = html;
+            html += `<span class="${className}">${match} <small class="${className}">${mmr}</small></span> `;
+        }
 
+        document.getElementById('matches').innerHTML = html;    
         
       
     }
@@ -165,6 +213,8 @@ function resetEverything()
     document.getElementById('mates_title').innerHTML=``;
     document.getElementById('matches').innerHTML=``;
     document.getElementById('matches_title').innerHTML=``;
+    document.getElementById('stats_k').innerHTML=``;
+    document.getElementById('stats_k2').innerHTML=``;
 
 
 }
@@ -189,7 +239,7 @@ async function getPlayer(playerName) {
             `;
         document.getElementById('stats_rank').innerHTML = `
             <b class="${data.rankcolor}">${data.rank} </b>
-            <img src = ${data.rank_img} >
+            <img src="${data.rank_img}" >
             
         `;
         document.getElementById('stats_kd').innerHTML=`
@@ -203,7 +253,7 @@ async function getPlayer(playerName) {
         <p>MMR: <b> ${data.mmr} </b> </p>
         `;
         document.getElementById('stats_k2').innerHTML=`
-                <p> Playtime: <b>${data.playtime}h</b> </p>
+                <p> Playtime: <b>${data.playtime}</b> </p>
 
         `;
         document.getElementById('stats_kills').innerHTML=`

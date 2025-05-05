@@ -1,8 +1,40 @@
 import unicodedata
 import requests
 import random
+import os
 
-API_YT = 'AIzaSyAN_9aZ-lgABbSma313Ba30rBMtS7t_1SI'
+
+API_YT = 's'
+
+import os
+import requests
+import urllib.parse
+
+def get_rank_image(cdn_wrapped_url):
+    save_folder='./FRONT/ranks'
+    os.makedirs(save_folder, exist_ok=True)
+
+    parts = cdn_wrapped_url.split('/')
+    encoded_image_url = parts[-2] 
+
+    real_image_url = urllib.parse.unquote(encoded_image_url)
+
+    filename = os.path.basename(real_image_url)
+    local_path = os.path.join(save_folder, filename)
+
+    if os.path.exists(local_path):
+        return local_path
+
+    response = requests.get(real_image_url)
+    if response.status_code == 200:
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+        return local_path
+    else:
+        raise Exception(f'Failed to download image. Status code: {response.status_code}')
+
+
+
 
 def get_best_ops(OPS):
     atk_nums = [0.0,0.0,0.0]
