@@ -94,18 +94,6 @@ operator_side_dict = {
 }
 
 
-
-OP = {
-    "Name":"",
-    "WR":0.0,
-    "Side":""
-}
-
-OPS = []
-
-
-
-
 def get_player():
     pass
 
@@ -117,11 +105,13 @@ def get_matches(player):
 
     matches_mmr = []
     matches = []
+    check = False
     for div in divs:
         matchstats = div.find_all("span")
         for match in matchstats:
             if "+" in match.text or "-" in match.text:
                 matches_mmr.append(match.text)
+                check = True
 
         classes = div.get('class',[])
         if any('match-row--loss' in cls for cls in classes):
@@ -132,12 +122,12 @@ def get_matches(player):
             matches.append("R")
     
     
-    return matches[:15],matches_mmr[:15]
+    return matches[:15],matches_mmr[:15],check
 
 
 
 def get_ops_values(soup):
-    OPS.clear()
+    OPS = []
     rows = soup.find_all("div",class_="trow stat-table-row")
     counter = 0
     for row in rows:
@@ -159,14 +149,17 @@ def get_ops_values(soup):
             counter = counter + 1
         else:
             break
+    
+    return OPS
 
-def get_ops_side():
+def get_ops_side(OPS):
     for op in OPS:
         name = op["Name"]
         if operator_side_dict[name]  == 'atk':
             op["Side"] = "atk"
         else:
             op["Side"] = "def"
+    
 
 
 
@@ -234,27 +227,29 @@ def get_teammates(player):
 
 def get_all_stats(player):
     PLAYER = {
-            "Name":"",
             "Rank":"",
             "RankColor":"",
             "RankImg":"",
-            "MMR":0.0,
-            "Win":0.0,
-            "KDA":0.0,
-            "Matches":0,
-            "Kills/Game":0.0,
+            "MMR":None,
+            "Win":None,
+            "KDA":None,
+            "Matches":None,
+            "Kills/Game":None,
             "Atk":["","",""],
             "Def":["","",""],
-            "Playtime":0.0,
+            "Playtime":None,
             "AtkImg":[],
-            "DefImg" :[] 
+            "DefImg" :[],
+            "Check":False
         }
-    PLAYER["Name"] = player
     soup_basic,soup_ops = scraper_player(player)
 
     rank_image = soup_basic.select_one('img.rank-image')
-    print(rank_image['src'])
-    PLAYER["RankImg"] = get_rank_image(rank_image['src'])
+    rank_image_def = None
+    if rank_image:
+        rank_image_def = get_rank_image(rank_image['src'])
+    else:
+        PLAYER["RankImg"] = "../FRONT/ranks/unranked.png"
 
     sections = soup_basic.find_all("section",class_="overview")
     for section in sections:
@@ -293,30 +288,47 @@ def get_all_stats(player):
                 if kills:
                     kills = kills.find("span").text.strip()
                     PLAYER["Kills/Game"] = kills
+                    PLAYER["Check"] = True
             
 
         stats = section.find_all("span")
 
+        rank_found = False
         for stat in stats:
                 for k in r6_ranks:
                     
                     if k in stat.text:
                         mmr = stat.find_next("span").text.strip()
                         mmr = mmr.replace("RP","")
-                        print(mmr)
                         PLAYER["MMR"] = mmr
                         PLAYER["Rank"] = stat.text
                         PLAYER["RankColor"] = k.lower()
-              
+                        PLAYER["Check"] = True
+                        PLAYER["RankImg"] = rank_image_def
+                        rank_found = True
+                        break
+           
+
+        if rank_found == False:
+            PLAYER["MMR"] = "0.0"
+            PLAYER["Rank"] = "Unranked"
+            PLAYER["RankColor"] = "unranked"
+            PLAYER["RankImg"] = "../FRONT/ranks/unranked.png"
     
-    get_ops_values(soup_ops)
-    get_ops_side()
+    OPS = get_ops_values(soup_ops)
+    get_ops_side(OPS)
     atk,df = get_best_ops(OPS)
-    PLAYER["Atk"] = atk
-    PLAYER['Def'] = df
+
+    if atk:
+        PLAYER["Atk"] = atk
+    if df:
+        PLAYER['Def'] = df
+
     atk,df = get_icons(atk,df)
-    PLAYER["AtkImg"] = atk
-    PLAYER["DefImg"] = df
+    if atk:
+        PLAYER["AtkImg"] = atk
+    if df:
+        PLAYER["DefImg"] = df
 
     return PLAYER
 

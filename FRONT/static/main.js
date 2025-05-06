@@ -1,5 +1,9 @@
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
+window.addEventListener('beforeunload', function () {
+    history.replaceState(null, '', window.location.pathname);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const playerName = params.get('player');
@@ -7,13 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (playerName) {
         document.getElementById('playerName').value = playerName
         getEverything(playerName);
-
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('playerName').value = ""
     }
 
     const images = [
         'static/pics/hereford.jpg',
         'static/pics/villa.jpg',
-        'static/pics/plane.jpg',
         'static/pics/house.jpg',
         'static/pics/border.jpg'
     ];
@@ -39,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(bodyBefore);
+});
+
+document.getElementById('infoButton').addEventListener('click', () => {
+    let isInfoPage = window.location.pathname.includes('info.html');
+    
+    if (isInfoPage) {
+        window.location.href = 'index.html';
+    } else {
+        window.location.href = 'info.html';
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -111,10 +125,7 @@ async function getMatches(playerName){
     const response = await fetch(`/api/matches?name=${playerName}`);
     const data = await response.json();
     if (data.error) {
-        document.getElementById('stats_title').innerHTML = `
-        <p>Not Found</p>`;
-        alert(data.error);
-    } else {
+    } else if(data.check) {
         
         document.getElementById('matches_title').innerHTML = 
         `
@@ -157,9 +168,7 @@ async function getVids(){
     const data = await response.json()
 
     if (data.error) {
-        document.getElementById('stats_title').innerHTML = `
-        <p>Not Found</p>`;
-        alert(data.error);
+
     } else {
   
         document.getElementById('vid1').innerHTML=`
@@ -227,14 +236,11 @@ async function getPlayer(playerName) {
     const response = await fetch(`/api/stats?name=${playerName}`);
     const data = await response.json();
     if (data.error) {
-        document.getElementById('stats_title').innerHTML = `
-        <p>Not Found</p>`;
-        alert(data.error);
-    } else {
-        document.getElementById('stats_title').innerHTML = `
-
-            `;
-            document.getElementById('loading').innerHTML = `
+        document.getElementById('loading').innerHTML = `
+        <p>Player isn't active or doesn't exist...</p>`;
+        //alert(data.error);
+    } else if(data.check) {
+        document.getElementById('loading').innerHTML = `
 
             `;
         document.getElementById('stats_rank').innerHTML = `
@@ -263,15 +269,22 @@ async function getPlayer(playerName) {
         <div> Matches: <b>${data.matches}</b> </div>
 
         `;
-        document.getElementById('stats_ops').innerHTML =`
-                <img src=${data.atkimg[0]} title=${data.atk1}>
-                <img src=${data.atkimg[1]} title=${data.atk2}>
-                <img src=${data.atkimg[2]} title=${data.atk3}>
-                <img src=${data.defimg[0]} title=${data.def1}>
-                <img src=${data.defimg[1]} title=${data.def2}>
-                <img src=${data.defimg[2]} title=${data.def3}>
-                
-        `
+        if(data.atk1){
+            document.getElementById('stats_ops').innerHTML =`
+            <img src=${data.atkimg[0]} title=${data.atk1}>
+            <img src=${data.atkimg[1]} title=${data.atk2}>
+            <img src=${data.atkimg[2]} title=${data.atk3}>
+            <img src=${data.defimg[0]} title=${data.def1}>
+            <img src=${data.defimg[1]} title=${data.def2}>
+            <img src=${data.defimg[2]} title=${data.def3}>
+            
+    `
+        }
+  
+    }
+    else{
+        document.getElementById('loading').innerHTML = `
+        <p>Player isn't active or doesn't exist....</p>`;
     }
 
     //getVids()
@@ -283,10 +296,13 @@ async function getMates(playerName){
     const data = await response.json()
 
     if (data.error) {
-        document.getElementById('stats_title').innerHTML = `
-        <p>Not Found</p>`;
+        document.getElementById('loading').innerHTML = `
+        <p>Player isn't active or doesn't exist....</p>`;
         alert(data.error);
-    } else {
+    } else if(data.mate1["Win"] == null){
+
+    } else
+    {
         document.getElementById('mates_title').innerHTML=`
             <h2>stack</h2>
         `;

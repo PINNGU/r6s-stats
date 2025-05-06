@@ -52,7 +52,7 @@ def scraper_matches(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(8500)
+        page.wait_for_timeout(6500)
         content_overview = page.content()
         soup = bs(content_overview, "html.parser")
 
@@ -78,7 +78,7 @@ def scraper_ops(url):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(4000)
+        page.wait_for_timeout(7000)
         soup = bs(page.content(),"html.parser")
 
         browser.close()

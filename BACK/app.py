@@ -20,13 +20,14 @@ def get_matches():
         return jsonify({"error": "Player name is required"}), 400
     else:
         try:
-            matches,matches_mmr = service.get_matches(name)
+            matches,matches_mmr,check = service.get_matches(name)
             print(matches,matches_mmr)
 
             return jsonify(
                 {
                     "matches":matches,
-                    "matches_mmr":matches_mmr
+                    "matches_mmr":matches_mmr,
+                    "check" : check
                 }
             )
         except Exception as e:
@@ -72,7 +73,8 @@ def get_player():
             "kills":stats["Kills/Game"],
             "matches":stats["Matches"],
             "mmr":stats["MMR"],
-            "playtime":stats["Playtime"]
+            "playtime":stats["Playtime"],
+            "check":stats["Check"]
                         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
