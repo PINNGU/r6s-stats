@@ -370,8 +370,8 @@ body::before {
     justify-content: center;
     align-items: center;
     justify-self: center;
-    min-width: 400px;
-    max-width: 49rem;
+    min-width: 43.2rem;
+    max-width: 47rem;
     opacity: 1.5;
 }
 
@@ -435,8 +435,8 @@ body::before {
     justify-content: center;
     align-items: center;
     justify-self: center;
-    min-width: 400px;
-    max-width: 48rem;
+    min-width: 43.2rem;
+    max-width: 47rem;
 }
 
 

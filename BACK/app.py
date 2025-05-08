@@ -62,14 +62,6 @@ def get_player():
             "rankcolor" : stats["RankColor"],
             "rank_img" : stats["RankImg"],
             "win" : stats["Win"],
-            "atk1" : stats["Atk"][0],
-            "atk2": stats["Atk"][1],
-            "atk3":stats["Atk"][2],
-            "def1" : stats["Def"][0],
-            "def2":stats["Def"][1],
-            "def3":stats["Def"][2],
-            "atkimg":stats["AtkImg"],
-            "defimg" : stats["DefImg"],
             "kills":stats["Kills/Game"],
             "matches":stats["Matches"],
             "mmr":stats["MMR"],
@@ -79,6 +71,30 @@ def get_player():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
+@app.route('/api/ops',methods=['GET'])
+def get_ops():
+    name = request.args.get('name')
+    if not name:
+        return jsonify({"error": "Player name is required"}), 400
+    
+    try:
+        stats = service.get_ops(name)
+        print(stats)
+        return jsonify({
+            "atk1" : stats["Atk"][0],
+            "atk2": stats["Atk"][1],
+            "atk3":stats["Atk"][2],
+            "def1" : stats["Def"][0],
+            "def2":stats["Def"][1],
+            "def3":stats["Def"][2],
+            "atkimg":stats["AtkImg"],
+            "defimg" : stats["DefImg"],
+            "check" :stats["Check"],
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/api/mates',methods=['GET'])
 def get_mates():

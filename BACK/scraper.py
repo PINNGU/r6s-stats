@@ -14,7 +14,9 @@ def scraper_player(name):
     url_operators = url_base + "operators"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True   ) 
+        browser = p.chromium.launch(headless=True ,args=['--disable-gpu', '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage']  ) 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                        "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
@@ -26,21 +28,23 @@ def scraper_player(name):
         page = context.new_page()
 
         page.goto(url_overview)
-        page.wait_for_timeout(3000)
+        page.wait_for_selector(".season-overview")
         content_overview = page.content()
         soup_basic = bs(content_overview, "html.parser")
 
 
         browser.close()
 
-    return soup_basic, scraper_ops(url_operators)
+    return soup_basic
 
 def scraper_matches(player):
     url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/matches?playlist=ranked"
 
    
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True   ) 
+        browser = p.chromium.launch(headless=True  ,args=['--disable-gpu', '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage']  ) 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                        "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
@@ -52,7 +56,7 @@ def scraper_matches(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(6500)
+        page.wait_for_selector(".match-group")
         content_overview = page.content()
         soup = bs(content_overview, "html.parser")
 
@@ -64,10 +68,12 @@ def scraper_matches(player):
     return soup
 
 
-def scraper_ops(url):
-
+def scraper_ops(player):
+    url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/operators"
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True) 
+        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage'] ) 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                        "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
@@ -78,7 +84,7 @@ def scraper_ops(url):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(7000)
+        page.wait_for_selector(".operators-table")
         soup = bs(page.content(),"html.parser")
 
         browser.close()
@@ -91,7 +97,9 @@ def scraper_mates(player):
     url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/encounters?playlist=ranked"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True) 
+        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage'] ) 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                        "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
@@ -102,7 +110,7 @@ def scraper_mates(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_timeout(2000)
+        page.wait_for_selector(".encounters")
         soup = bs(page.content(),"html.parser")
 
         browser.close()

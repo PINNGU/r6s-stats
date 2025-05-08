@@ -114,12 +114,16 @@ function getEverything(playerName)
     <img src ="static/pics/loading3.gif" alt = "Loading..."/>
 
     `
+    getOperators(playerName)
     getPlayer(playerName)
     getMatches(playerName)
     getMates(playerName)
     
     
+    
 }
+
+
 
 async function getMatches(playerName){
     const response = await fetch(`/api/matches?name=${playerName}`);
@@ -151,7 +155,15 @@ async function getMatches(playerName){
             html += `<span class="${className}">${match} <small class="${className}">${mmr}</small></span> `;
         }
 
-        document.getElementById('matches').innerHTML = html;    
+        document.getElementById('matches').innerHTML = html;  
+        if(document.getElementById('mates_title').innerHTML == ``)
+            {
+                document.getElementById('mates_title').innerHTML =
+                `
+                <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+            
+                `
+            }  
         
       
     }
@@ -228,6 +240,33 @@ function resetEverything()
 
 }
 
+async function getOperators(playerName){
+    const response = await fetch(`/api/ops?name=${playerName}`);
+    const data = await response.json();
+    if (data.error) {
+        
+    } else if (data.check) {
+            document.getElementById('stats_ops').innerHTML =`
+            <img src=${data.atkimg[0]} title=${data.atk1}>
+            <img src=${data.atkimg[1]} title=${data.atk2}>
+            <img src=${data.atkimg[2]} title=${data.atk3}>
+            <img src=${data.defimg[0]} title=${data.def1}>
+            <img src=${data.defimg[1]} title=${data.def2}>
+            <img src=${data.defimg[2]} title=${data.def3}>
+            
+        `
+        if(document.getElementById('matches').innerHTML == ``)
+            {
+                document.getElementById('matches').innerHTML =
+                `
+                <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+            
+                `
+            }
+        
+    }
+}
+
 
 async function getPlayer(playerName) {
     
@@ -269,17 +308,15 @@ async function getPlayer(playerName) {
         <div> Matches: <b>${data.matches}</b> </div>
 
         `;
-        if(data.atk1){
-            document.getElementById('stats_ops').innerHTML =`
-            <img src=${data.atkimg[0]} title=${data.atk1}>
-            <img src=${data.atkimg[1]} title=${data.atk2}>
-            <img src=${data.atkimg[2]} title=${data.atk3}>
-            <img src=${data.defimg[0]} title=${data.def1}>
-            <img src=${data.defimg[1]} title=${data.def2}>
-            <img src=${data.defimg[2]} title=${data.def3}>
-            
-    `
+        if(document.getElementById('stats_ops').innerHTML == ``)
+        {
+            document.getElementById('stats_ops').innerHTML =
+            `
+            <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+        
+            `
         }
+
   
     }
     else{

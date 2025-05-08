@@ -1,4 +1,4 @@
-from scraper import scraper_player,scraper_mates,scraper_matches
+from scraper import scraper_player,scraper_mates,scraper_matches,scraper_ops
 from optimizator import get_best_ops,get_icons,get_rank_image
 from bs4 import BeautifulSoup as bs
 
@@ -92,6 +92,33 @@ operator_side_dict = {
     
 
 }
+
+def get_ops(player):
+    ret = {
+        "Atk":None,
+        "Def":None,
+        "AtkImg":None,
+        "DefImg":None,
+        "Check" :False
+    }
+    soup_ops = scraper_ops(player)
+    OPS = get_ops_values(soup_ops)
+    get_ops_side(OPS)
+    atk,df = get_best_ops(OPS)
+
+    if atk:
+        ret["Atk"] = atk
+        ret["Check"] = True
+    if df:
+        ret['Def'] = df
+
+    atk,df = get_icons(atk,df)
+    if atk:
+        ret["AtkImg"] = atk
+    if df:
+        ret["DefImg"] = df
+
+    return ret
 
 
 def get_player():
@@ -235,14 +262,10 @@ def get_all_stats(player):
             "KDA":None,
             "Matches":None,
             "Kills/Game":None,
-            "Atk":["","",""],
-            "Def":["","",""],
             "Playtime":None,
-            "AtkImg":[],
-            "DefImg" :[],
             "Check":False
         }
-    soup_basic,soup_ops = scraper_player(player)
+    soup_basic = scraper_player(player)
 
     rank_image = soup_basic.select_one('img.rank-image')
     rank_image_def = None
@@ -315,20 +338,6 @@ def get_all_stats(player):
             PLAYER["RankColor"] = "unranked"
             PLAYER["RankImg"] = "../FRONT/ranks/unranked.png"
     
-    OPS = get_ops_values(soup_ops)
-    get_ops_side(OPS)
-    atk,df = get_best_ops(OPS)
-
-    if atk:
-        PLAYER["Atk"] = atk
-    if df:
-        PLAYER['Def'] = df
-
-    atk,df = get_icons(atk,df)
-    if atk:
-        PLAYER["AtkImg"] = atk
-    if df:
-        PLAYER["DefImg"] = df
 
     return PLAYER
 

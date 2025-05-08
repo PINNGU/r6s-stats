@@ -1,4 +1,4 @@
-from stats import get_all_stats,get_teammates,get_matches
+from stats import get_all_stats,get_teammates,get_matches,get_ops
 from optimizator import get_all_vids
 
 
@@ -8,9 +8,10 @@ class Service:
         self.stats = {}
 
     def get_stats(self,name):
-        self.stats = get_all_stats(name)
-        print(self.stats)
-        return self.stats
+        return get_all_stats(name)
+    
+    def get_ops(self,name):
+        return get_ops(name)
     
     def get_matches(self,name):
         return get_matches(name)
