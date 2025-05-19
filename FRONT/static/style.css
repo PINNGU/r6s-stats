@@ -180,6 +180,11 @@ body::before {
     background-color: #2e2e2e;
 }
 
+.ranks img {
+    width:3px;
+    height:3px;
+}
+
 .stats {
     border: 2px solid transparent;
     border-radius: 3px; 
@@ -372,6 +377,8 @@ body::before {
     justify-self: center;
     min-width: 43.2rem;
     max-width: 47rem;
+    min-height: 9rem;
+    max-height: fit-content;
     opacity: 1.5;
 }
 

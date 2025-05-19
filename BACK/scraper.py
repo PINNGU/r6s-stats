@@ -14,7 +14,7 @@ def scraper_player(name):
     url_operators = url_base + "operators"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True ,args=['--disable-gpu', '--no-sandbox',
+        browser = p.chromium.launch(args=[ '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage']  ) 
         context = browser.new_context(
@@ -24,11 +24,17 @@ def scraper_player(name):
             java_script_enabled=True
         )
 
-        stealth_sync(context)
+
         page = context.new_page()
 
         page.goto(url_overview)
-        page.wait_for_selector(".season-overview")
+        try:
+            page.wait_for_selector(".season-overview",timeout=10000)
+        except:
+            page.reload()
+            page.wait_for_selector(".season-overview",timeout=10000)
+        
+
         content_overview = page.content()
         soup_basic = bs(content_overview, "html.parser")
 
@@ -56,7 +62,12 @@ def scraper_matches(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_selector(".match-group")
+        try:
+            page.wait_for_selector(".match-group")
+        except:
+            page.reload()
+            page.wait_for_selector(".match-group")
+        
         content_overview = page.content()
         soup = bs(content_overview, "html.parser")
 
@@ -84,7 +95,13 @@ def scraper_ops(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_selector(".operators-table")
+        
+        try:
+            page.wait_for_selector(".operators-table")
+        except:
+            page.reload()
+            page.wait_for_selector(".operators-table")
+        
         soup = bs(page.content(),"html.parser")
 
         browser.close()
@@ -97,7 +114,7 @@ def scraper_mates(player):
     url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/encounters?playlist=ranked"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
+        browser = p.chromium.launch(args=['--disable-gpu', '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage'] ) 
         context = browser.new_context(
@@ -110,7 +127,13 @@ def scraper_mates(player):
         page = context.new_page()
 
         page.goto(url)
-        page.wait_for_selector(".encounters")
+        
+        try:
+            page.wait_for_timeout(3000)
+        except:
+            page.reload()
+            page.wait_for_timeout(3000)
+        
         soup = bs(page.content(),"html.parser")
 
         browser.close()
