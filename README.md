@@ -1,5 +1,6 @@
 ## Simple , sleek and modern Rainbow Six Siege player tracker. Allows players to easily see just the statistics they need and share them even easier.
-![Screenshot](https://github.com/user-attachments/assets/1cb0ed7d-ce30-489b-8e05-49278ebf7b3f)
+
+![Screenshot_3](https://github.com/user-attachments/assets/3fa35466-ff06-427a-af7f-0b73952a8042)
 
 
 ##### Data gathered using webscrapping in Python ( Flask , Playwright , BeautifulSoup)
