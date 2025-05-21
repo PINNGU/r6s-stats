@@ -48,7 +48,7 @@ def scraper_matches(player):
 
    
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True  ,args=['--disable-gpu', '--no-sandbox',
+        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage']  ) 
         context = browser.new_context(
@@ -82,7 +82,7 @@ def scraper_matches(player):
 def scraper_ops(player):
     url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/operators"
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
+        browser = p.chromium.launch(args=['--disable-gpu', '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage'] ) 
         context = browser.new_context(
@@ -114,7 +114,7 @@ def scraper_mates(player):
     url = f"https://r6.tracker.network/r6siege/profile/ubi/{player}/encounters?playlist=ranked"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(args=['--disable-gpu', '--no-sandbox',
+        browser = p.chromium.launch(headless=True,args=['--disable-gpu', '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage'] ) 
         context = browser.new_context(
@@ -128,11 +128,13 @@ def scraper_mates(player):
 
         page.goto(url)
         
-        try:
-            page.wait_for_timeout(3000)
-        except:
-            page.reload()
-            page.wait_for_timeout(3000)
+        
+        for delay in [3000, 4000,5000,7000]:
+            try:
+                page.wait_for_timeout(delay)
+                break
+            except:
+                page.reload()
         
         soup = bs(page.content(),"html.parser")
 

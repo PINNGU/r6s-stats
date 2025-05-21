@@ -45,6 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(bodyBefore);
 });
 
+
+function showAlert(message, type = 'info', duration = 3000) {
+  const alertBox = document.getElementById('custom-alert');
+  const alertMsg = document.getElementById('alert-message');
+
+  alertMsg.textContent = message;
+  alertBox.className = `alert ${type} show`;
+
+  setTimeout(() => {
+    alertBox.classList.remove('show');
+    setTimeout(() => {
+      alertBox.classList.add('hidden');
+    }, 300);
+  }, duration);
+}
+
 document.getElementById('infoButton').addEventListener('click', () => {
     let isInfoPage = window.location.pathname.includes('info.html');
     
@@ -87,15 +103,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 navigator.clipboard.write([
                     new ClipboardItem({ 'image/png': blob })
                 ]).then(() => {
-                    alert('Copied screenshot to clipboard.');
+                    showAlert('Copied screenshot to clipboard.',"success");
                 }).catch(err => {
-                    console.error('Failed to copy image to clipboard:', err);
+                    showAlert('Failed to copy screenshot.',"error");
                 });
             });
         });
     });
 });
 
+function copyCurrentURL() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      showAlert("URL copied.", "success");
+    })
+    .catch(err => {
+      showAlert("Failed to copy URL.", "error");
+    });
+}
 
 function getEverything(playerName)
 {

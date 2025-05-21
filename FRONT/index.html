@@ -107,7 +107,7 @@
                     <button id="screenshotButton" class="ssbutton">
                 
                     </button>
-                    <button   class="sharebutton">
+                    <button  onclick="copyCurrentURL()"  class="sharebutton">
     
                     </button>
                     <button id="infoButton" class="infobutton">
@@ -123,10 +123,13 @@
 
         <div></div>
         <!--<div class="side right-side"></div>-->
-        
+        <div id="custom-alert" class="alert hidden">
+            <span id="alert-message"></span>
+        </div>
     </div>
 
     <p class="footer"><i>Data sourced from Tracker Network. This site is not affiliated with Ubisoft or Rainbow Six Siege. All trademarks are property of their respective owners. More info on about page.</i></p>
+  
 </body>
 </html>
 
