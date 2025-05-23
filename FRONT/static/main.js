@@ -1,4 +1,5 @@
-
+let isSearching = false;
+let lastSearchQuery = "";
 
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
@@ -193,7 +194,7 @@ async function getMatches(playerName){
                 {
                     document.getElementById('mates_title').innerHTML =
                     `
-                    <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+                    <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
                 
                     `
                 }  
@@ -242,6 +243,13 @@ async function getVids(){
 
 function search(){
     const playerName = document.getElementById('playerName').value;
+    if(isSearching && playerName === lastSearchQuery){
+        return;
+    }
+
+    isSearching = true;
+    lastSearchQuery = playerName;
+    
     getEverything(playerName)
 }
 

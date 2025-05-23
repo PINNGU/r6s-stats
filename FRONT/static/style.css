@@ -72,6 +72,7 @@ body::before {
         position: fixed;
         bottom: 1.5%;
         left:5%;
+        flex-wrap: wrap;
     }
     .layout-main {
       grid-template-columns: 1fr;
@@ -247,6 +248,7 @@ body::before {
     grid-template-columns: auto min-content auto;
     column-gap: 0.5rem;
     margin-top: 0.5rem;
+    cursor: default;
     
 }
 
@@ -255,7 +257,7 @@ body::before {
     grid-template-columns: 1fr 2fr 2fr 1fr;
     column-gap: 0.5rem;
     margin-top: 0.5rem;
-    
+    cursor: default;
 }
 
 .ops{
@@ -264,6 +266,7 @@ body::before {
     align-items: center;
     font-family: 'Orbitron', sans-serif;
     padding-top: 0.5rem;
+    cursor: default;
 }
 .ops img{
     width:7rem;
@@ -285,6 +288,7 @@ body::before {
     grid-template-columns: 1fr 1fr 1fr 1fr;
 
     gap:2px;
+    cursor: default;
     
 }
 
@@ -386,6 +390,7 @@ body::before {
     min-height: 9rem;
     max-height: fit-content;
     opacity: 1.5;
+    
 }
 
 .boxwrapper {
@@ -430,6 +435,7 @@ body::before {
     justify-content: center;
     align-items: center;
     margin-top: -2%;
+    cursor: default;
 }
 
 .matches_title{
@@ -535,8 +541,14 @@ body::before {
     height: 50px;
     border: none;
     cursor:pointer;
+    transition: 0.35s ease;
 }
 
+.ssbutton:hover,.sharebutton:hover,.infobutton:hover,.returnbutton:hover{
+    transform:scale(1.15);
+    transition: 0.35s ease;
+
+}
 
 .sharebutton{
     background-image: url('pics/share.svg');
@@ -549,6 +561,7 @@ body::before {
     height: 50px;
     border: none;
     cursor: pointer;
+    transition: 0.35s ease;
 }
 
 .infobutton{
@@ -561,6 +574,7 @@ body::before {
     height: 50px;
     border: none;
     cursor:pointer;
+    transition: 0.35s ease;
 }
 
 
@@ -575,6 +589,7 @@ body::before {
     height: 50px;
     border: none;
     cursor:pointer;
+    transition: 0.35s ease;
 }
 
 .buttons{
@@ -582,15 +597,32 @@ body::before {
         grid-template-columns: repeat(3, auto); 
         gap: 0.5rem;  
         position: fixed;
-        bottom: 4.5%;
+        bottom:4.5%;
         left: 50%;
         transform: translateX(-50%);
     
 }
+
+@media (max-height: 500px) {
+  .buttons {
+    position: static;
+    margin-top: 1rem;
+  }
+
+  .footer p{
+    position:static;
+    margin-top:1rem;
+  }
+}
+
+
+
 .buttons *{
     margin: 5px;
     opacity: 0.85;
 }
+
+
 
 .buttons-info{
     display: flex;
@@ -687,5 +719,7 @@ body::before {
     position: fixed;
     bottom: 1.5%;
     left:25%;
+    flex-wrap: wrap;
+    max-width: 60%;
 }
 
