@@ -1,3 +1,5 @@
+
+
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
 window.addEventListener('beforeunload', function () {
@@ -49,14 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function showAlert(message, type = 'info', duration = 3000) {
   const alertBox = document.getElementById('custom-alert');
   const alertMsg = document.getElementById('alert-message');
+  const title = document.getElementById('site-title');
 
+title.classList.add('hidden');
   alertMsg.textContent = message;
   alertBox.className = `alert ${type} show`;
 
   setTimeout(() => {
     alertBox.classList.remove('show');
+    title.classList.add('shown');
+    
     setTimeout(() => {
       alertBox.classList.add('hidden');
+      title.classList.remove('hidden');
     }, 300);
   }, duration);
 }
@@ -128,7 +135,7 @@ function getEverything(playerName)
  
     resetEverything()
     if (!playerName) {
-        alert("Please enter a player name!");
+        showAlert("Please enter a player name!","error");
         return;
     }
 
@@ -152,49 +159,47 @@ function getEverything(playerName)
 
 
 async function getMatches(playerName){
-    const response = await fetch(`/api/matches?name=${playerName}`);
-    const data = await response.json();
-    if (data.error) {
-    } else if(data.check) {
-        
-        document.getElementById('matches_title').innerHTML = 
-        `
-            <h1>match history</h1>
-        `;
+        const response = await fetch(`/api/matches?name=${playerName}`);
+        const data = await response.json();
+        if (data.error) {
+        } else if(data.check) {
+            
+            document.getElementById('matches_title').innerHTML = 
+            `
+                <h1>match history</h1>
+            `;
 
-        let html = '';
+            let html = '';
 
-        for (let i = 0; i < data.matches.length; i++) {
-            const match = data.matches[i];
-            const mmr = data.matches_mmr[i];
+            for (let i = 0; i < data.matches.length; i++) {
+                const match = data.matches[i];
+                const mmr = data.matches_mmr[i];
 
-            let className = '';
-            if (match === 'W') {    
-                className = 'win';
-            } else if (match === 'L') {
-                className = 'loss';
-            } else if (match === 'R') {
-                className = 'remake';
+                let className = '';
+                if (match === 'W') {    
+                    className = 'win';
+                } else if (match === 'L') {
+                    className = 'loss';
+                } else if (match === 'R') {
+                    className = 'remake';
+                }
+
+
+                html += `<span class="${className}">${match} <small class="${className}">${mmr}</small></span> `;
             }
 
-
-            html += `<span class="${className}">${match} <small class="${className}">${mmr}</small></span> `;
-        }
-
-        document.getElementById('matches').innerHTML = html;  
-        if(document.getElementById('mates_title').innerHTML == ``)
-            {
-                document.getElementById('mates_title').innerHTML =
-                `
-                <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+            document.getElementById('matches').innerHTML = html;  
+            if(document.getElementById('mates_title').innerHTML == ``)
+                {
+                    document.getElementById('mates_title').innerHTML =
+                    `
+                    <img src ="static/pics/loading3.gif" alt = "Loading..."/>
+                
+                    `
+                }  
             
-                `
-            }  
         
-      
-    }
-
-    
+        }
     
 
 }

@@ -1,9 +1,47 @@
 from service import Service
 from flask import Flask,jsonify,request,send_from_directory
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
 
 app = Flask(__name__, static_folder='../FRONT', template_folder='../FRONT')
+limiter = Limiter(get_remote_address,app=app)
+csp = {
+    'default-src': [
+        '\'self\''
+    ],
+    'style-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        'https://fonts.googleapis.com',
+        'https://cdn.jsdelivr.net'  
+    ],
+    'font-src': [
+        '\'self\'',
+        'https://fonts.gstatic.com'
+    ],
+    'img-src': [
+        '\'self\'',
+        'data:',
+        'https://your-image-cdn.com'
+    ],
+    'script-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        'https://cdn.jsdelivr.net'
+    ]
+}
+
+Talisman(app, content_security_policy=csp)
 
 service = Service()
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return jsonify({
+        "error":"Rate limit exceeded. Please try again later."
+    }),429
+
 
 @app.route('/')
 def serve_index():
@@ -14,6 +52,7 @@ def serve_static_files(path):
     return send_from_directory('../FRONT', path)
 
 @app.route('/api/matches',methods=['GET'])
+@limiter.limit("5 per minute")
 def get_matches():
     name = request.args.get('name')
     if not name:
@@ -34,6 +73,7 @@ def get_matches():
             return jsonify({"error": str(e)}), 500
 
 @app.route('/api/vids',methods=['GET'])
+@limiter.limit("5 per minute")
 def get_vids():
     try:
         vids = service.get_all_vids()
@@ -48,6 +88,7 @@ def get_vids():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/stats', methods=['GET'])
+@limiter.limit("5 per minute")
 def get_player():
     name = request.args.get('name')
     if not name:
@@ -73,6 +114,7 @@ def get_player():
     
 
 @app.route('/api/ops',methods=['GET'])
+@limiter.limit("5 per minute")
 def get_ops():
     name = request.args.get('name')
     if not name:
@@ -97,6 +139,7 @@ def get_ops():
 
 
 @app.route('/api/mates',methods=['GET'])
+@limiter.limit("5 per minute")
 def get_mates():
     name = request.args.get('name')
     if not name:

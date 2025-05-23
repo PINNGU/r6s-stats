@@ -22,15 +22,20 @@
         <!--<div class="side left-side"></div>-->
 
         <div id="allstats" class="allstats">
-            <h1 class="main">r6me</h1>
+                <h1 class="site-title" id="site-title">r6me</h1>
+            <div id="custom-alert" class="alert hidden">
+                <span id="alert-message"></span>
+            </div>
 
             <div class="main">
                 <input type="text" id="playerName" name="playerName" class="main" placeholder="Enter Ubisoft Name:">
                 <button id="getStatsBtn" class="main">Get Stats</button>
             </div>
+
+  
             
             <div class="border-top"></div>
-        
+  
             
             
             <div id="loading" class="loading"></div>
@@ -123,9 +128,7 @@
 
         <div></div>
         <!--<div class="side right-side"></div>-->
-        <div id="custom-alert" class="alert hidden">
-            <span id="alert-message"></span>
-        </div>
+
     </div>
 
     <p class="footer"><i>Data sourced from Tracker Network. This site is not affiliated with Ubisoft or Rainbow Six Siege. All trademarks are property of their respective owners. More info on about page.</i></p>
