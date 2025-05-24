@@ -10,7 +10,7 @@ csp = {
     'default-src': [
         '\'self\''
     ],
-    'style-src': [
+    'style-src': [ 
         '\'self\'',
         '\'unsafe-inline\'',
         'https://fonts.googleapis.com',
