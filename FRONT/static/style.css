@@ -119,12 +119,14 @@ body::before {
     justify-content: center;
     align-items: center;
     font-family: 'Orbitron', sans-serif;
+    transition: 0.6s ease;
 }
 
 .loading img {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     opacity: 0.8;
+     transition: 0.6s ease; 
 }
 
 .left-side {
@@ -158,7 +160,8 @@ body::before {
     font-size: clamp(20px, 2vw, 26px);
     white-space: nowrap;
     overflow: hidden;
-    height: 5.2vh;
+    height: 6.8vh;
+    transition: 0.7s ease;
 }
 
 .ranks:not(:empty) {
@@ -170,6 +173,7 @@ body::before {
 .ranks img {
     width: 3px;
     height: 3px;
+    transition: 0.35s ease;
 }
 
 .stats {
@@ -189,6 +193,7 @@ body::before {
     overflow: hidden;
     height: 6vh;
     padding-left: -6rem;
+    transition: 0.7s ease;
 }
 
 .stats2 {
@@ -206,6 +211,7 @@ body::before {
     white-space: nowrap;
     overflow: hidden;
     height: 7vh;
+    transition: 0.7s ease;
 }
 
 .stats2:not(:empty) {
@@ -224,15 +230,16 @@ body::before {
     display: grid;
     grid-template-columns: auto min-content auto;
     column-gap: 0.5rem;
-    margin-top: 0.5vh;
+    margin-top: 0;
     cursor: default;
+    max-height:15vh;
 }
 
 .layout-stats2 {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
     column-gap: 0.5rem;
-    margin-top: 0.7vh;
+    margin-top: 0.2vh;
     cursor: default;
 }
 
@@ -244,12 +251,15 @@ body::before {
     padding-top: 1vh;
     cursor: default;
     padding-bottom: 0;
+    margin-bottom:1.5vh;
+    transition: 2s ease-in;
 }
 
 .ops img {
     width: 7rem;
     height: 7rem;
     padding: 0 0.4rem;
+    transition: 2s ease;
 }
 
 .border-top {
@@ -265,6 +275,7 @@ body::before {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 2px;
     cursor: default;
+    transition: ease 1s;
 }
 
 .mate {
@@ -275,6 +286,7 @@ body::before {
     gap: 2px;
     font-family: 'Share Tech Mono', sans-serif;
     font-size: 20px;
+    padding:0.3vh;
 }
 
 .mate p {
@@ -316,12 +328,12 @@ body::before {
 
 .main input {
     width: 26.3rem;
-    height: 2.5vh;
+    height: 2.8vh;
 }
 
 .main button {
     width: 15.3rem;
-    height: 5.7vh;
+    height: 5.3vh;
 }
 
 .main button,
@@ -355,12 +367,15 @@ input {
     justify-content: center;
     align-items: center;
     justify-self: center;
-    min-width: 43.2rem;
+    min-width: 44.2rem;
     max-width: 47rem;
-    min-height: 9rem;
+    min-height: 8.5rem;
     max-height: fit-content;
     opacity: 1.5;
+    
 }
+
+
 
 .boxwrapper {
     display: flex;
@@ -368,7 +383,9 @@ input {
     justify-content: center;
     height: 9rem;
     margin-top: 0.3rem;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    max-height: 15vh;
+    transition: ease 1s;
 }
 
 .stackbox * {
@@ -427,11 +444,12 @@ span) {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -3.5vh;
+    margin-top: -1.5vh;
     margin-left: -1vh;
     margin-right: -1vh;
-    margin-bottom: 3vh;
+    margin-bottom: 1.5vh;
     cursor: default;
+    transition: ease 1s;
 }
 
 .matches_title {
@@ -453,7 +471,8 @@ span) {
     max-width: 47rem;
     margin-top: -2vh;
     margin-bottom: -10vh;
-    height: 14vh;
+    height: 8.5rem;
+    
 }
 
 .matchbox legend {
@@ -530,8 +549,8 @@ span) {
     background-color: transparent;
     display: inline-block;
     border: none;
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     cursor: pointer;
     transition: 0.35s ease;
 }
@@ -540,7 +559,7 @@ span) {
 .sharebutton:hover,
 .infobutton:hover,
 .returnbutton:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
     transition: 0.35s ease;
 }
 
@@ -549,8 +568,8 @@ span) {
     background-size: cover;
     background-color: transparent;
     display: inline-block;
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     border: none;
     cursor: pointer;
     transition: 0.35s ease;
@@ -561,8 +580,8 @@ span) {
     background-size: cover;
     background-color: transparent;
     display: inline-block;
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     border: none;
     cursor: pointer;
     transition: 0.35s ease;
@@ -687,7 +706,7 @@ span) {
 }
 
 .hidden {
-    display: none;
+    display: none;  
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -697,10 +716,12 @@ span) {
     justify-self: center;
     font-family: 'Orbitron', sans-serif;
     font-size: 10px;
-    position: fixed;
-    bottom: 1.5%;
     flex-wrap: wrap;
     max-width: 100%;
-    margin-left: 18vw;
-    margin-right: 18vw;
+    align-self: center;
+    bottom: 0.8vh;
+    position: fixed;
+    
+    
+    
 }

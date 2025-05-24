@@ -134,15 +134,11 @@ function copyCurrentURL() {
 function getEverything(playerName) {
 
     resetEverything()
-    if (!playerName) {
-        showAlert("Please enter a player name!", "error");
-        return;
-    }
 
     const newUrl = `?player=${encodeURIComponent(playerName)}`;
     window.history.pushState({}, '', newUrl);
 
-    document.getElementById('loading').innerHTML =
+    document.getElementById('loading1').innerHTML =
         `
     <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
 
@@ -162,6 +158,7 @@ async function getMatches(playerName) {
     const response = await fetch(`/api/matches?name=${playerName}`);
     const data = await response.json();
     if (data.error) {} else if (data.check) {
+        document.getElementById('loading3').innerHTML = ``;
 
         document.getElementById('matches_title').innerHTML =
             `
@@ -189,7 +186,7 @@ async function getMatches(playerName) {
 
         document.getElementById('matches').innerHTML = html;
         if (document.getElementById('mates_title').innerHTML == ``) {
-            document.getElementById('mates_title').innerHTML =
+            document.getElementById('loading4').innerHTML =
                 `
                     <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
                 
@@ -240,6 +237,11 @@ async function getVids() {
 
 function search() {
     const playerName = document.getElementById('playerName').value;
+    if (!playerName) {
+        showAlert("Please enter a player name!", "error");
+        return;
+    }
+
     if (isSearching && playerName === lastSearchQuery) {
         return;
     }
@@ -271,6 +273,10 @@ function resetEverything() {
     document.getElementById('matches_title').innerHTML = ``;
     document.getElementById('stats_k').innerHTML = ``;
     document.getElementById('stats_k2').innerHTML = ``;
+    document.getElementById('loading1').innerHTML = ``;
+    document.getElementById('loading2').innerHTML = ``;
+    document.getElementById('loading3').innerHTML = ``;
+    document.getElementById('loading4').innerHTML = ``;
 
 
 }
@@ -281,17 +287,38 @@ async function getOperators(playerName) {
     if (data.error) {
 
     } else if (data.check) {
-        document.getElementById('stats_ops').innerHTML = `
-            <img src=${data.atkimg[0]} title=${data.atk1}>
-            <img src=${data.atkimg[1]} title=${data.atk2}>
-            <img src=${data.atkimg[2]} title=${data.atk3}>
-            <img src=${data.defimg[0]} title=${data.def1}>
-            <img src=${data.defimg[1]} title=${data.def2}>
-            <img src=${data.defimg[2]} title=${data.def3}>
-            
-        `
+        document.getElementById('loading2').innerHTML = ``;
+        const container = document.getElementById('stats_ops');
+        container.innerHTML = ''; 
+
+        const images = [
+        { src: data.atkimg[0], title: data.atk1 },
+        { src: data.atkimg[1], title: data.atk2 },
+        { src: data.atkimg[2], title: data.atk3 },
+        { src: data.defimg[0], title: data.def1 },
+        { src: data.defimg[1], title: data.def2 },
+        { src: data.defimg[2], title: data.def3 }
+        ];
+
+        images.forEach((imgData, index) => {
+        setTimeout(() => {
+            const img = document.createElement('img');
+            img.src = imgData.src;
+            img.title = imgData.title;
+            img.style.opacity = 0;
+            img.style.transition = 'opacity 2s ease';
+
+            container.appendChild(img);
+
+           
+            requestAnimationFrame(() => {
+            img.style.opacity = 1;
+            });
+        }, index * 400); 
+        });
+
         if (document.getElementById('matches').innerHTML == ``) {
-            document.getElementById('matches').innerHTML =
+            document.getElementById('loading3').innerHTML =
                 `
                 <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
             
@@ -313,7 +340,7 @@ async function getPlayer(playerName) {
         <p>Player isn't active or doesn't exist...</p>`;
         //alert(data.error);
     } else if (data.check) {
-        document.getElementById('loading').innerHTML = `
+        document.getElementById('loading1').innerHTML = `
 
             `;
         document.getElementById('stats_rank').innerHTML = `
@@ -343,7 +370,7 @@ async function getPlayer(playerName) {
 
         `;
         if (document.getElementById('stats_ops').innerHTML == ``) {
-            document.getElementById('stats_ops').innerHTML =
+            document.getElementById('loading2').innerHTML =
                 `
             <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
         
@@ -352,7 +379,7 @@ async function getPlayer(playerName) {
 
 
     } else {
-        document.getElementById('loading').innerHTML = `
+        document.getElementById('loading1').innerHTML = `
         <p>Player isn't active or doesn't exist....</p>`;
     }
 
@@ -365,12 +392,13 @@ async function getMates(playerName) {
     const data = await response.json()
 
     if (data.error) {
-        document.getElementById('loading').innerHTML = `
+        document.getElementById('loading1').innerHTML = `
         <p>Player isn't active or doesn't exist....</p>`;
         alert(data.error);
     } else if (data.mate1["Win"] == null) {
 
     } else {
+        document.getElementById('loading4').innerHTML= ``;
         document.getElementById('mates_title').innerHTML = `
             <h2>stack</h2>
         `;
