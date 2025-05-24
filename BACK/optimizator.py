@@ -3,11 +3,6 @@ import requests
 import random
 import os
 
-
-API_YT = 's'
-
-import os
-import requests
 import urllib.parse
 
 def get_rank_image(cdn_wrapped_url):
@@ -104,7 +99,7 @@ def get_video(keyword):
         'q': keywords,
         'type': 'video',
         'maxResults': 10,
-        'key': API_YT
+        'key': "1"
     }
 
     response = requests.get(url, params=params)
