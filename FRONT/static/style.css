@@ -276,6 +276,8 @@ body::before {
     gap: 2px;
     cursor: default;
     transition: ease 1s;
+ 
+    align-items: center;
 }
 
 .mate {
@@ -291,6 +293,17 @@ body::before {
 
 .mate p {
     margin-top: -5px;
+    
+}
+.mate div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.mate span {
+    margin-top:-5px;
 }
 
 .main {
@@ -369,8 +382,8 @@ input {
     justify-self: center;
     min-width: 44.2rem;
     max-width: 47rem;
-    min-height: 8.5rem;
-    max-height: fit-content;
+    min-height: 9.5rem;
+    max-height: 12rem;
     opacity: 1.5;
     
 }
@@ -647,6 +660,12 @@ span) {
     pointer-events: none;
 }
 
+.title-div{
+    display:flex;
+    justify-self: center;
+
+}
+
 .site-title {
     justify-self: center;
     color: #e0e0e0;
@@ -654,10 +673,15 @@ span) {
     border-radius: 10px;
     font-size: clamp(2.2rem, 2vw, 3rem) !important;
     z-index: 9999;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 2s ease-in, transform 2s ease-in;
     font-family: 'Orbitron', sans-serif;
     margin-top: 0.7vh;
     margin-bottom: 0.7vh;
+    cursor:default;
+}
+
+.title-season{
+    color: #d46524;
 }
 
 .site-title.hidden {
@@ -673,7 +697,7 @@ span) {
 .alert {
     justify-self: center;
     background-color: #1f1e1e;
-    ;
+    
     color: #e0e0e0;
     padding: 7px 11px;
     border-radius: 10px;
@@ -681,7 +705,7 @@ span) {
     font-size: clamp(2.2rem, 2vw, 3rem) !important;
     z-index: 9999;
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 1s ease, transform 1s ease;
     font-family: 'Orbitron', sans-serif;
     margin-top: 0.7vh;
     margin-bottom: 0.7vh;
@@ -691,6 +715,7 @@ span) {
 .alert.show {
     opacity: 1;
     transform: translateY(0);
+    
 }
 
 .alert.success {

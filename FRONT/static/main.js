@@ -7,6 +7,11 @@ window.addEventListener('beforeunload', function() {
     history.replaceState(null, '', window.location.pathname);
 });
 
+function validateName(name){
+  const regex = /^[a-zA-Z0-9_.\-]+$/;
+  return regex.test(name) && name.length > 0 && name.length <= 30;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const playerName = params.get('player');
@@ -53,8 +58,12 @@ function showAlert(message, type = 'info', duration = 3000) {
     const alertBox = document.getElementById('custom-alert');
     const alertMsg = document.getElementById('alert-message');
     const title = document.getElementById('site-title');
+    const title2 = document.getElementById('site-title2');
+
 
     title.classList.add('hidden');
+    title2.classList.add('hidden');
+
     alertMsg.textContent = message;
     alertBox.className = `alert ${type} show`;
 
@@ -65,7 +74,9 @@ function showAlert(message, type = 'info', duration = 3000) {
         setTimeout(() => {
             alertBox.classList.add('hidden');
             title.classList.remove('hidden');
-        }, 300);
+            title2.classList.remove('hidden');
+
+        }, 800);
     }, duration);
 }
 
@@ -246,10 +257,17 @@ function search() {
         return;
     }
 
-    isSearching = true;
-    lastSearchQuery = playerName;
+    if(validateName(playerName)){
+        isSearching = true;
+        lastSearchQuery = playerName;
 
-    getEverything(playerName)
+        getEverything(playerName)
+    }
+    else{
+        showAlert("Bad input.","error");
+    }
+
+
 }
 
 function goToMate(playerName) {
@@ -406,13 +424,16 @@ async function getMates(playerName) {
             <a href="#" onclick="goToMate('${data.mate1["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate1["Name"]}</a>
             <p class="${data.mate1["RankColor"]}"><b> ${data.mate1["Rank"]} </b> </p>
             <p> ${data.mate1["Win"]}</p>
-    
+                       <div> <p>${data.mate1["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+
         `;
 
         document.getElementById('stats_mate2').innerHTML = `
             <a href="#" onclick="goToMate('${data.mate2["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate2["Name"]}</a>
             <p class="${data.mate2["RankColor"]}"><b> ${data.mate2["Rank"]}</b> </p>
             <p> ${data.mate2["Win"]}</p>
+                       <div> <p>${data.mate2["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+
 
         `;
 
@@ -420,6 +441,7 @@ async function getMates(playerName) {
             <a href="#" onclick="goToMate('${data.mate3["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate3["Name"]}</a>
             <p class="${data.mate3["RankColor"]}"><b> ${data.mate3["Rank"]}</b> </p>
             <p> ${data.mate3["Win"]}</p>
+                       <div> <p>${data.mate3["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
 
          `;
 
@@ -427,6 +449,7 @@ async function getMates(playerName) {
             <a href="#" onclick="goToMate('${data.mate4["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate4["Name"]}</a>
             <p class="${data.mate4["RankColor"]}"><b> ${data.mate4["Rank"]}</b> </p>
             <p> ${data.mate4["Win"]}</p>
+            <div> <p>${data.mate4["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
    
         `;
 

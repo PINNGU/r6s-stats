@@ -196,25 +196,29 @@ def get_teammates(player):
         "Name":"",
         "Rank":"",
         "RankColor":"",
-        "Win":None
+        "Win":None,
+        "Encounters":""
     },
     {
         "Name":"",
         "Rank":"",
         "RankColor":"",
-        "Win":None
+        "Win":None,
+        "Encounters":""
     },
     {
         "Name":"",
         "Rank":"",
         "RankColor":"",
-        "Win":None
+        "Win":None,
+        "Encounters":""
     },
     {
         "Name":"",
         "Rank":"",
         "RankColor":"",
-        "Win":None
+        "Win":None,
+        "Encounters":""
     },
 
     ]
@@ -226,6 +230,7 @@ def get_teammates(player):
         if counter < 4:
             cols = section.find_all("span")
             name = cols[0].get_text(strip=True)
+            encounters = cols[2].get_text(strip=True)
             winrate = cols[7].get_text(strip=True) if len(cols) > 3 else "N/A"
             winrate = winrate.replace("%",'')
             winrate = float(winrate)
@@ -233,6 +238,8 @@ def get_teammates(player):
 
             if name:
                 MATES[counter]["Name"] = name
+            if encounters:
+                MATES[counter]["Encounters"] = encounters
             if winrate:
                 MATES[counter]["Win"] = str(winrate) + "% WR"
             if image:
