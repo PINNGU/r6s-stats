@@ -8,7 +8,8 @@
 
 </div>
 
-![Screenshot_3](https://github.com/user-attachments/assets/3fa35466-ff06-427a-af7f-0b73952a8042)
+![Screenshot_7](https://github.com/user-attachments/assets/891453bf-53dd-497f-971f-372a1b701541)
+
 
 ##### Data gathered using webscrapping in Python ( Flask , Playwright , BeautifulSoup)
 Data sourced from Tracker Network. This site is not affiliated with Ubisoft or Rainbow Six Siege. All trademarks are property of their respective owners.
