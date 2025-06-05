@@ -52,7 +52,7 @@ def serve_static_files(path):
     return send_from_directory('../FRONT', path)
 
 @app.route('/api/matches',methods=['GET'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def get_matches():
     name = request.args.get('name')
     if not name:
@@ -88,7 +88,7 @@ def get_vids():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/stats', methods=['GET'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def get_player():
     name = request.args.get('name')
     if not name:
@@ -114,7 +114,7 @@ def get_player():
     
 
 @app.route('/api/ops',methods=['GET'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def get_ops():
     name = request.args.get('name')
     if not name:
@@ -139,7 +139,7 @@ def get_ops():
 
 
 @app.route('/api/mates',methods=['GET'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def get_mates():
     name = request.args.get('name')
     if not name:

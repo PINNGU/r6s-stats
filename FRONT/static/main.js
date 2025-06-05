@@ -2,6 +2,12 @@ let isSearching = false;
 let lastSearchQuery = "";
 let matchesLoaded = false;
 
+//for reload
+const ctrlOps = new AbortController();
+const ctrlStats = new AbortController();
+const ctrlMates = new AbortController();
+const ctrlMatches = new AbortController();
+
 const ui = {
   player_name: document.getElementById('playerName'),  
   stats_rank: document.getElementById('stats_rank'),
@@ -28,7 +34,12 @@ const ui = {
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
 window.addEventListener('beforeunload', function() {
-    //history.replaceState(null, '', window.location.pathname);
+    history.replaceState(null, '', window.location.pathname);
+    if (ctrlStats) ctrlStats.abort();
+    if (ctrlOps) ctrlOps.abort();
+    if (ctrlMates) ctrlMates.abort();
+    if (ctrlMatches) ctrlMatches.abort();
+    resetEverything();
 });
 
 function validateName(name){
@@ -43,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (playerName) {
         ui.player_name.value = playerName
         getEverything(playerName);
+        history.replaceState(null, '', window.location.pathname);
+        ui.player_name.value = "";
+        resetEverything();
+        if (ctrlStats) ctrlStats.abort();
+        if (ctrlOps) ctrlOps.abort();
+        if (ctrlMates) ctrlMates.abort();
+        if (ctrlMatches) ctrlMatches.abort();
 
     }
 
@@ -183,15 +201,210 @@ function getEverything(playerName) {
     getMates(playerName)
 
 
-
 }
 
 
 
-async function getMatches(playerName) {
-    const response = await fetch(`/api/matches?name=${playerName}`);
+function search() {
+    const playerName = ui.player_name.value;
+    if (!playerName) {
+        showAlert("Please enter a player name!", "error");
+        return;
+    }
+
+    if (isSearching && playerName === lastSearchQuery) {
+        return;
+    }
+
+    if(validateName(playerName)){
+        isSearching = true;
+        lastSearchQuery = playerName;
+
+        getEverything(playerName)
+    }
+    else{
+        showAlert("Bad input.","error");
+    }
+
+
+}
+
+function goToMate(playerName) {
+    getEverything(playerName)
+    ui.player_name.value = playerName
+}
+
+function resetEverything() {
+    for (let key in ui) {
+        if (ui[key]) ui[key].innerHTML = '';
+    }
+
+}
+
+async function getOperators(playerName) {
+
+    const response = await fetch(`/api/ops?name=${playerName}`,{signal:ctrlOps.signal});
     const data = await response.json();
-    if (data.error) {} else if (data.check) {
+    if (data.error) {
+
+    } else if (data.check && !ctrlOps.signal.aborted) {
+        ui.loading2.innerHTML = ``;
+        const container = ui.stats_ops;
+        container.innerHTML = ''; 
+
+        const images = [
+        { src: data.atkimg[0], title: data.atk1 },
+        { src: data.atkimg[1], title: data.atk2 },
+        { src: data.atkimg[2], title: data.atk3 },
+        { src: data.defimg[0], title: data.def1 },
+        { src: data.defimg[1], title: data.def2 },
+        { src: data.defimg[2], title: data.def3 }
+        ];
+
+        images.forEach((imgData, index) => {
+        setTimeout(() => {
+            const img = document.createElement('img');
+            img.src = imgData.src;
+            img.title = imgData.title;
+            img.style.opacity = 0;
+            img.style.transition = 'opacity 2s ease';
+
+            container.appendChild(img);
+
+           
+            requestAnimationFrame(() => {
+            img.style.opacity = 1;
+            });
+        }, index * 400); 
+        });
+
+        if (ui.matches.innerHTML == ``) {
+            ui.loading3.innerHTML =
+                `
+                <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
+            
+                `
+        }
+
+    }
+}
+
+
+async function getPlayer(playerName) {
+
+
+    const response = await fetch(`/api/stats?name=${playerName}`,{signal:ctrlStats.signal});
+    const data = await response.json();
+    if (data.error) {
+        ui.loading1.innerHTML = `
+        <p>Player isn't active or doesn't exist...</p>`;
+        //alert(data.error);
+    } else if (data.check && !ctrlStats.signal.aborted) {
+        ui.loading1.innerHTML = `
+
+            `;
+        ui.stats_rank.innerHTML = `
+            <b class="${data.rankcolor}">${data.rank} </b>
+            <img src="${data.rank_img}" >
+            
+        `;
+        ui.stats_kd.innerHTML = `
+                <p>KDA: <b> ${data.kd} </b> </p>
+        `;
+        ui.stats_wr.innerHTML = `
+                <p> WR: <b>${data.win}</b> </p>
+    
+        `;
+        ui.stats_k.innerHTML = `
+        <p>MMR: <b> ${data.mmr} </b> </p>
+        `;
+        ui.stats_k2.innerHTML = `
+                <p> Playtime: <b>${data.playtime}</b> </p>
+
+        `;
+        ui.stats_kills.innerHTML = `
+        <div> Kills/Game: <b>${data.kills} </b></div>
+        `;
+        ui.stats_match.innerHTML = `
+        <div> Matches: <b>${data.matches}</b> </div>
+
+        `;
+        if (ui.stats_ops.innerHTML == ``) {
+            ui.loading2.innerHTML =
+                `
+            <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
+        
+            `
+        }
+
+
+    } else {
+        ui.loading1.innerHTML = `
+        <p>Player isn't active or doesn't exist....</p>`;
+    }
+
+    
+}
+
+async function getMates(playerName) {
+
+    const response = await fetch(`/api/mates?name=${playerName}`,{signal:ctrlMates.signal});
+    const data = await response.json()
+
+    if (data.error) {
+        ui.loading1.innerHTML = `
+        <p>Player isn't active or doesn't exist....</p>`;
+        alert(data.error);
+    } else if (data.mate1["Win"] == null) {
+
+    } else if(!ctrlMates.signal.aborted) {
+        ui.loading4.innerHTML= ``;
+        ui.mates_title.innerHTML = `
+            <h2>stack</h2>
+        `;
+        ui.stats_mate1.innerHTML = `
+            <a href="#" onclick="goToMate('${data.mate1["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate1["Name"]}</a>
+            <p class="${data.mate1["RankColor"]}"><b> ${data.mate1["Rank"]} </b> </p>
+            <p> ${data.mate1["Win"]}</p>
+                       <div> <p>${data.mate1["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+
+        `;
+
+        ui.stats_mate2.innerHTML = `
+            <a href="#" onclick="goToMate('${data.mate2["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate2["Name"]}</a>
+            <p class="${data.mate2["RankColor"]}"><b> ${data.mate2["Rank"]}</b> </p>
+            <p> ${data.mate2["Win"]}</p>
+                       <div> <p>${data.mate2["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+
+
+        `;
+
+        ui.stats_mate3.innerHTML = `
+            <a href="#" onclick="goToMate('${data.mate3["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate3["Name"]}</a>
+            <p class="${data.mate3["RankColor"]}"><b> ${data.mate3["Rank"]}</b> </p>
+            <p> ${data.mate3["Win"]}</p>
+                       <div> <p>${data.mate3["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+
+         `;
+
+        ui.stats_mate4.innerHTML = `
+            <a href="#" onclick="goToMate('${data.mate4["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate4["Name"]}</a>
+            <p class="${data.mate4["RankColor"]}"><b> ${data.mate4["Rank"]}</b> </p>
+            <p> ${data.mate4["Win"]}</p>
+            <div> <p>${data.mate4["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
+   
+        `;
+
+
+    }
+}
+
+async function getMatches(playerName) {
+
+    const response = await fetch(`/api/matches?name=${playerName}`,{signal:ctrlMatches.signal});
+    const data = await response.json();
+    if (data.error) {} 
+    else if (data.check && !ctrlMatches.signal.aborted) {
         ui.loading3.innerHTML = ``;
 
         ui.matches_title.innerHTML =
@@ -271,198 +484,3 @@ async function getVids() {
 
 }
 */
-
-
-function search() {
-    const playerName = ui.player_name.value;
-    if (!playerName) {
-        showAlert("Please enter a player name!", "error");
-        return;
-    }
-
-    if (isSearching && playerName === lastSearchQuery) {
-        return;
-    }
-
-    if(validateName(playerName)){
-        isSearching = true;
-        lastSearchQuery = playerName;
-
-        getEverything(playerName)
-    }
-    else{
-        showAlert("Bad input.","error");
-    }
-
-
-}
-
-function goToMate(playerName) {
-    getEverything(playerName)
-    ui.player_name.value = playerName
-}
-
-function resetEverything() {
-    for (let key in ui) {
-        if (ui[key]) ui[key].innerHTML = '';
-    }
-
-}
-
-async function getOperators(playerName) {
-    const response = await fetch(`/api/ops?name=${playerName}`);
-    const data = await response.json();
-    if (data.error) {
-
-    } else if (data.check) {
-        ui.loading2.innerHTML = ``;
-        const container = ui.stats_ops;
-        container.innerHTML = ''; 
-
-        const images = [
-        { src: data.atkimg[0], title: data.atk1 },
-        { src: data.atkimg[1], title: data.atk2 },
-        { src: data.atkimg[2], title: data.atk3 },
-        { src: data.defimg[0], title: data.def1 },
-        { src: data.defimg[1], title: data.def2 },
-        { src: data.defimg[2], title: data.def3 }
-        ];
-
-        images.forEach((imgData, index) => {
-        setTimeout(() => {
-            const img = document.createElement('img');
-            img.src = imgData.src;
-            img.title = imgData.title;
-            img.style.opacity = 0;
-            img.style.transition = 'opacity 2s ease';
-
-            container.appendChild(img);
-
-           
-            requestAnimationFrame(() => {
-            img.style.opacity = 1;
-            });
-        }, index * 400); 
-        });
-
-        if (ui.matches.innerHTML == ``) {
-            ui.loading3.innerHTML =
-                `
-                <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
-            
-                `
-        }
-
-    }
-}
-
-
-async function getPlayer(playerName) {
-
-
-
-    const response = await fetch(`/api/stats?name=${playerName}`);
-    const data = await response.json();
-    if (data.error) {
-        ui.loading1.innerHTML = `
-        <p>Player isn't active or doesn't exist...</p>`;
-        //alert(data.error);
-    } else if (data.check) {
-        ui.loading1.innerHTML = `
-
-            `;
-        ui.stats_rank.innerHTML = `
-            <b class="${data.rankcolor}">${data.rank} </b>
-            <img src="${data.rank_img}" >
-            
-        `;
-        ui.stats_kd.innerHTML = `
-                <p>KDA: <b> ${data.kd} </b> </p>
-        `;
-        ui.stats_wr.innerHTML = `
-                <p> WR: <b>${data.win}</b> </p>
-    
-        `;
-        ui.stats_k.innerHTML = `
-        <p>MMR: <b> ${data.mmr} </b> </p>
-        `;
-        ui.stats_k2.innerHTML = `
-                <p> Playtime: <b>${data.playtime}</b> </p>
-
-        `;
-        ui.stats_kills.innerHTML = `
-        <div> Kills/Game: <b>${data.kills} </b></div>
-        `;
-        ui.stats_match.innerHTML = `
-        <div> Matches: <b>${data.matches}</b> </div>
-
-        `;
-        if (ui.stats_ops.innerHTML == ``) {
-            ui.loading2.innerHTML =
-                `
-            <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
-        
-            `
-        }
-
-
-    } else {
-        ui.loading1.innerHTML = `
-        <p>Player isn't active or doesn't exist....</p>`;
-    }
-
-    //getVids()
-}
-
-async function getMates(playerName) {
-
-    const response = await fetch(`/api/mates?name=${playerName}`);
-    const data = await response.json()
-
-    if (data.error) {
-        ui.loading1.innerHTML = `
-        <p>Player isn't active or doesn't exist....</p>`;
-        alert(data.error);
-    } else if (data.mate1["Win"] == null) {
-
-    } else {
-        ui.loading4.innerHTML= ``;
-        ui.mates_title.innerHTML = `
-            <h2>stack</h2>
-        `;
-        ui.stats_mate1.innerHTML = `
-            <a href="#" onclick="goToMate('${data.mate1["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate1["Name"]}</a>
-            <p class="${data.mate1["RankColor"]}"><b> ${data.mate1["Rank"]} </b> </p>
-            <p> ${data.mate1["Win"]}</p>
-                       <div> <p>${data.mate1["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
-
-        `;
-
-        ui.stats_mate2.innerHTML = `
-            <a href="#" onclick="goToMate('${data.mate2["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate2["Name"]}</a>
-            <p class="${data.mate2["RankColor"]}"><b> ${data.mate2["Rank"]}</b> </p>
-            <p> ${data.mate2["Win"]}</p>
-                       <div> <p>${data.mate2["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
-
-
-        `;
-
-        ui.stats_mate3.innerHTML = `
-            <a href="#" onclick="goToMate('${data.mate3["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate3["Name"]}</a>
-            <p class="${data.mate3["RankColor"]}"><b> ${data.mate3["Rank"]}</b> </p>
-            <p> ${data.mate3["Win"]}</p>
-                       <div> <p>${data.mate3["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
-
-         `;
-
-        ui.stats_mate4.innerHTML = `
-            <a href="#" onclick="goToMate('${data.mate4["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate4["Name"]}</a>
-            <p class="${data.mate4["RankColor"]}"><b> ${data.mate4["Rank"]}</b> </p>
-            <p> ${data.mate4["Win"]}</p>
-            <div> <p>${data.mate4["Encounters"]} </p> <img style="width:1.5rem; height:1.35rem; padding-bottom:0.5rem; padding-left:0.5rem;" src="static/pics/enc.svg" title="Games together"> </div>
-   
-        `;
-
-
-    }
-}
