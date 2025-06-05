@@ -1,10 +1,34 @@
 let isSearching = false;
 let lastSearchQuery = "";
+let matchesLoaded = false;
+
+const ui = {
+  player_name: document.getElementById('playerName'),  
+  stats_rank: document.getElementById('stats_rank'),
+  stats_kd: document.getElementById('stats_kd'),
+  stats_wr: document.getElementById('stats_wr'),
+  stats_kills: document.getElementById('stats_kills'),
+  stats_match: document.getElementById('stats_match'),
+  stats_ops: document.getElementById('stats_ops'),
+  stats_mate1: document.getElementById('stats_mate1'),
+  stats_mate2: document.getElementById('stats_mate2'),
+  stats_mate3: document.getElementById('stats_mate3'),
+  stats_mate4: document.getElementById('stats_mate4'),
+  mates_title: document.getElementById('mates_title'),
+  matches: document.getElementById('matches'),
+  matches_title: document.getElementById('matches_title'),
+  stats_k: document.getElementById('stats_k'),
+  stats_k2: document.getElementById('stats_k2'),
+  loading1: document.getElementById('loading1'),
+  loading2: document.getElementById('loading2'),
+  loading3: document.getElementById('loading3'),
+  loading4: document.getElementById('loading4')
+};
 
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
 window.addEventListener('beforeunload', function() {
-    history.replaceState(null, '', window.location.pathname);
+    //history.replaceState(null, '', window.location.pathname);
 });
 
 function validateName(name){
@@ -17,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerName = params.get('player');
 
     if (playerName) {
-        document.getElementById('playerName').value = playerName
+        ui.player_name.value = playerName
         getEverything(playerName);
-        history.replaceState(null, '', window.location.pathname);
-        document.getElementById('playerName').value = ""
+
     }
 
     const images = [
@@ -149,7 +172,7 @@ function getEverything(playerName) {
     const newUrl = `?player=${encodeURIComponent(playerName)}`;
     window.history.pushState({}, '', newUrl);
 
-    document.getElementById('loading1').innerHTML =
+    ui.loading1.innerHTML =
         `
     <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
 
@@ -169,9 +192,9 @@ async function getMatches(playerName) {
     const response = await fetch(`/api/matches?name=${playerName}`);
     const data = await response.json();
     if (data.error) {} else if (data.check) {
-        document.getElementById('loading3').innerHTML = ``;
+        ui.loading3.innerHTML = ``;
 
-        document.getElementById('matches_title').innerHTML =
+        ui.matches_title.innerHTML =
             `
                 <h1>match history</h1>
             `;
@@ -192,12 +215,13 @@ async function getMatches(playerName) {
             }
 
 
-            html += `<span class="${className}">${match} <small class="${className}">${mmr}</small></span> `;
+            html += `<span class="${className}" title="className">${match} <small class="${className}">${mmr}</small></span> `;
         }
 
-        document.getElementById('matches').innerHTML = html;
-        if (document.getElementById('mates_title').innerHTML == ``) {
-            document.getElementById('loading4').innerHTML =
+        ui.matches.innerHTML = html;
+        
+        if (ui.mates_title.innerHTML == ``) {
+            ui.loading4.innerHTML =
                 `
                     <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
                 
@@ -210,6 +234,7 @@ async function getMatches(playerName) {
 
 }
 
+/*
 async function getVids() {
 
 
@@ -245,9 +270,11 @@ async function getVids() {
 
 
 }
+*/
+
 
 function search() {
-    const playerName = document.getElementById('playerName').value;
+    const playerName = ui.player_name.value;
     if (!playerName) {
         showAlert("Please enter a player name!", "error");
         return;
@@ -272,30 +299,13 @@ function search() {
 
 function goToMate(playerName) {
     getEverything(playerName)
-    document.getElementById('playerName').value = playerName
+    ui.player_name.value = playerName
 }
 
 function resetEverything() {
-    document.getElementById('stats_rank').innerHTML = ``;
-    document.getElementById('stats_kd').innerHTML = ``;
-    document.getElementById('stats_wr').innerHTML = ``;
-    document.getElementById('stats_kills').innerHTML = ``;
-    document.getElementById('stats_match').innerHTML = ``;
-    document.getElementById('stats_ops').innerHTML = ``;
-    document.getElementById('stats_mate1').innerHTML = ``;
-    document.getElementById('stats_mate2').innerHTML = ``;
-    document.getElementById('stats_mate3').innerHTML = ``;
-    document.getElementById('stats_mate4').innerHTML = ``;
-    document.getElementById('mates_title').innerHTML = ``;
-    document.getElementById('matches').innerHTML = ``;
-    document.getElementById('matches_title').innerHTML = ``;
-    document.getElementById('stats_k').innerHTML = ``;
-    document.getElementById('stats_k2').innerHTML = ``;
-    document.getElementById('loading1').innerHTML = ``;
-    document.getElementById('loading2').innerHTML = ``;
-    document.getElementById('loading3').innerHTML = ``;
-    document.getElementById('loading4').innerHTML = ``;
-
+    for (let key in ui) {
+        if (ui[key]) ui[key].innerHTML = '';
+    }
 
 }
 
@@ -305,8 +315,8 @@ async function getOperators(playerName) {
     if (data.error) {
 
     } else if (data.check) {
-        document.getElementById('loading2').innerHTML = ``;
-        const container = document.getElementById('stats_ops');
+        ui.loading2.innerHTML = ``;
+        const container = ui.stats_ops;
         container.innerHTML = ''; 
 
         const images = [
@@ -335,8 +345,8 @@ async function getOperators(playerName) {
         }, index * 400); 
         });
 
-        if (document.getElementById('matches').innerHTML == ``) {
-            document.getElementById('loading3').innerHTML =
+        if (ui.matches.innerHTML == ``) {
+            ui.loading3.innerHTML =
                 `
                 <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
             
@@ -354,41 +364,41 @@ async function getPlayer(playerName) {
     const response = await fetch(`/api/stats?name=${playerName}`);
     const data = await response.json();
     if (data.error) {
-        document.getElementById('loading').innerHTML = `
+        ui.loading1.innerHTML = `
         <p>Player isn't active or doesn't exist...</p>`;
         //alert(data.error);
     } else if (data.check) {
-        document.getElementById('loading1').innerHTML = `
+        ui.loading1.innerHTML = `
 
             `;
-        document.getElementById('stats_rank').innerHTML = `
+        ui.stats_rank.innerHTML = `
             <b class="${data.rankcolor}">${data.rank} </b>
             <img src="${data.rank_img}" >
             
         `;
-        document.getElementById('stats_kd').innerHTML = `
+        ui.stats_kd.innerHTML = `
                 <p>KDA: <b> ${data.kd} </b> </p>
         `;
-        document.getElementById('stats_wr').innerHTML = `
+        ui.stats_wr.innerHTML = `
                 <p> WR: <b>${data.win}</b> </p>
     
         `;
-        document.getElementById('stats_k').innerHTML = `
+        ui.stats_k.innerHTML = `
         <p>MMR: <b> ${data.mmr} </b> </p>
         `;
-        document.getElementById('stats_k2').innerHTML = `
+        ui.stats_k2.innerHTML = `
                 <p> Playtime: <b>${data.playtime}</b> </p>
 
         `;
-        document.getElementById('stats_kills').innerHTML = `
+        ui.stats_kills.innerHTML = `
         <div> Kills/Game: <b>${data.kills} </b></div>
         `;
-        document.getElementById('stats_match').innerHTML = `
+        ui.stats_match.innerHTML = `
         <div> Matches: <b>${data.matches}</b> </div>
 
         `;
-        if (document.getElementById('stats_ops').innerHTML == ``) {
-            document.getElementById('loading2').innerHTML =
+        if (ui.stats_ops.innerHTML == ``) {
+            ui.loading2.innerHTML =
                 `
             <img src ="static/pics/loading3.gif" alt = "Loading..." class="loading"/>
         
@@ -397,7 +407,7 @@ async function getPlayer(playerName) {
 
 
     } else {
-        document.getElementById('loading1').innerHTML = `
+        ui.loading1.innerHTML = `
         <p>Player isn't active or doesn't exist....</p>`;
     }
 
@@ -410,17 +420,17 @@ async function getMates(playerName) {
     const data = await response.json()
 
     if (data.error) {
-        document.getElementById('loading1').innerHTML = `
+        ui.loading1.innerHTML = `
         <p>Player isn't active or doesn't exist....</p>`;
         alert(data.error);
     } else if (data.mate1["Win"] == null) {
 
     } else {
-        document.getElementById('loading4').innerHTML= ``;
-        document.getElementById('mates_title').innerHTML = `
+        ui.loading4.innerHTML= ``;
+        ui.mates_title.innerHTML = `
             <h2>stack</h2>
         `;
-        document.getElementById('stats_mate1').innerHTML = `
+        ui.stats_mate1.innerHTML = `
             <a href="#" onclick="goToMate('${data.mate1["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate1["Name"]}</a>
             <p class="${data.mate1["RankColor"]}"><b> ${data.mate1["Rank"]} </b> </p>
             <p> ${data.mate1["Win"]}</p>
@@ -428,7 +438,7 @@ async function getMates(playerName) {
 
         `;
 
-        document.getElementById('stats_mate2').innerHTML = `
+        ui.stats_mate2.innerHTML = `
             <a href="#" onclick="goToMate('${data.mate2["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate2["Name"]}</a>
             <p class="${data.mate2["RankColor"]}"><b> ${data.mate2["Rank"]}</b> </p>
             <p> ${data.mate2["Win"]}</p>
@@ -437,7 +447,7 @@ async function getMates(playerName) {
 
         `;
 
-        document.getElementById('stats_mate3').innerHTML = `
+        ui.stats_mate3.innerHTML = `
             <a href="#" onclick="goToMate('${data.mate3["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate3["Name"]}</a>
             <p class="${data.mate3["RankColor"]}"><b> ${data.mate3["Rank"]}</b> </p>
             <p> ${data.mate3["Win"]}</p>
@@ -445,7 +455,7 @@ async function getMates(playerName) {
 
          `;
 
-        document.getElementById('stats_mate4').innerHTML = `
+        ui.stats_mate4.innerHTML = `
             <a href="#" onclick="goToMate('${data.mate4["Name"]}')" style="color: inherit; text-decoration: none;" >${data.mate4["Name"]}</a>
             <p class="${data.mate4["RankColor"]}"><b> ${data.mate4["Rank"]}</b> </p>
             <p> ${data.mate4["Win"]}</p>

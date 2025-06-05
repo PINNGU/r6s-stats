@@ -276,7 +276,7 @@ body::before {
     gap: 2px;
     cursor: default;
     transition: ease 1s;
- 
+    position:relative;
     align-items: center;
 }
 
@@ -385,6 +385,7 @@ input {
     min-height: 9.5rem;
     max-height: 12rem;
     opacity: 1.5;
+    position:fixed;
     
 }
 
@@ -399,6 +400,7 @@ input {
     margin-bottom: 10px;
     max-height: 15vh;
     transition: ease 1s;
+    
 }
 
 .stackbox * {
@@ -485,6 +487,8 @@ span) {
     margin-top: -2vh;
     margin-bottom: -10vh;
     height: 8.5rem;
+    max-height:12rem;
+    position:relative;
     
 }
 
