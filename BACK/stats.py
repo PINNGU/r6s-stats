@@ -1,5 +1,5 @@
-from scraper import scraper_player,scraper_mates,scraper_matches,scraper_ops
-from optimizator import get_best_ops,get_icons,get_rank_image
+from .scraper import scraper_player,scraper_mates,scraper_matches,scraper_ops
+from .optimizator import get_best_ops,get_icons,get_rank_image
 from bs4 import BeautifulSoup as bs
 
 

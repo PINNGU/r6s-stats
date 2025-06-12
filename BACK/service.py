@@ -1,5 +1,5 @@
-from stats import get_all_stats,get_teammates,get_matches,get_ops
-from optimizator import get_all_vids
+from .stats import get_all_stats,get_teammates,get_matches,get_ops
+from .optimizator import get_all_vids
 
 
 class Service:
