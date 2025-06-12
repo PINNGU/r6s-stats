@@ -444,7 +444,7 @@ span) {
 }
 
 .diamond {
-    color: #022c9e;
+    color:rgb(37, 73, 172);
 }
 
 .champion {
@@ -684,8 +684,12 @@ span) {
     cursor:default;
 }
 
-.title-season{
+.season-1{
     color: #d46524;
+}
+
+.season-2{
+    color:rgb(155, 155, 155);
 }
 
 .site-title.hidden {

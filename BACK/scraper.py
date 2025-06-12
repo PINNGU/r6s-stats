@@ -28,11 +28,13 @@ def scraper_player(name):
         page = context.new_page()
 
         page.goto(url_overview)
-        try:
-            page.wait_for_selector(".season-overview",timeout=10000)
-        except:
-            page.reload()
-            page.wait_for_selector(".season-overview",timeout=10000)
+        for delay in [4000, 6000,7000,8000,10000]:
+            try:
+                page.wait_for_selector(".season-overview",timeout=delay)
+                break
+            except:
+                page.reload()
+     
         
 
         content_overview = page.content()
@@ -62,11 +64,15 @@ def scraper_matches(player):
         page = context.new_page()
 
         page.goto(url)
-        try:
-            page.wait_for_selector(".match-group")
-        except:
-            page.reload()
-            page.wait_for_selector(".match-group")
+
+        for delay in [8000,10000,13000]:
+            try:
+                page.wait_for_selector(".match-group",timeout=delay)
+                break
+            except:
+                page.reload()
+     
+        
         
         content_overview = page.content()
         soup = bs(content_overview, "html.parser")
@@ -96,11 +102,13 @@ def scraper_ops(player):
 
         page.goto(url)
         
-        try:
-            page.wait_for_selector(".operators-table")
-        except:
-            page.reload()
-            page.wait_for_selector(".operators-table")
+        for delay in [3000, 4000,5000,7000]:
+            try:
+                page.wait_for_selector(".operators-table",timeout=delay)
+                break
+            except:
+                page.reload()
+
         
         soup = bs(page.content(),"html.parser")
 

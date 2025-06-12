@@ -3,10 +3,10 @@ let lastSearchQuery = "";
 let matchesLoaded = false;
 
 //for reload
-const ctrlOps = new AbortController();
-const ctrlStats = new AbortController();
-const ctrlMates = new AbortController();
-const ctrlMatches = new AbortController();
+let ctrlOps = new AbortController();
+let ctrlStats = new AbortController();
+let ctrlMates = new AbortController();
+let ctrlMatches = new AbortController();
 
 const ui = {
   player_name: document.getElementById('playerName'),  
@@ -31,14 +31,12 @@ const ui = {
   loading4: document.getElementById('loading4')
 };
 
+
+
 document.getElementById('getStatsBtn').addEventListener('click', search);
 
 window.addEventListener('beforeunload', function() {
     history.replaceState(null, '', window.location.pathname);
-    if (ctrlStats) ctrlStats.abort();
-    if (ctrlOps) ctrlOps.abort();
-    if (ctrlMates) ctrlMates.abort();
-    if (ctrlMatches) ctrlMatches.abort();
     resetEverything();
 });
 
@@ -51,17 +49,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const playerName = params.get('player');
 
-    if (playerName) {
-        ui.player_name.value = playerName
-        getEverything(playerName);
-        history.replaceState(null, '', window.location.pathname);
-        ui.player_name.value = "";
-        resetEverything();
-        if (ctrlStats) ctrlStats.abort();
-        if (ctrlOps) ctrlOps.abort();
-        if (ctrlMates) ctrlMates.abort();
-        if (ctrlMatches) ctrlMatches.abort();
+  const navigationEntries = performance.getEntriesByType('navigation');
+    const isReload = navigationEntries.length > 0 && navigationEntries[0].type === 'reload';
 
+    if (playerName) {
+        ui.player_name.value = playerName;
+        getEverything(playerName);
+
+        if (isReload) {
+            // On refresh, clear URL and reset UI
+            history.replaceState(null, '', window.location.pathname);
+            ui.player_name.value = "";
+            resetEverything();
+            if (ctrlStats) ctrlStats.abort();
+            if (ctrlOps) ctrlOps.abort();
+            if (ctrlMates) ctrlMates.abort();
+            if (ctrlMatches) ctrlMatches.abort();
+        }
+    
     }
 
     const images = [
@@ -238,6 +243,16 @@ function resetEverything() {
     for (let key in ui) {
         if (ui[key]) ui[key].innerHTML = '';
     }
+
+    ctrlOps.abort();
+    ctrlStats.abort();
+    ctrlMates.abort();
+    ctrlMatches.abort();
+
+    ctrlOps = new AbortController();
+    ctrlStats = new AbortController();
+    ctrlMates = new AbortController();
+    ctrlMatches = new AbortController();
 
 }
 

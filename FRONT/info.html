@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>About | r6me </title>
+    <title>About | rsix.me </title>
     <script src="static/main.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -29,19 +29,29 @@
 
 
                 <h1 class="main-info">Copyrights</h1>
-                <p class="main-info">sitename uses webscrapping to access publicly available data from <a href="https://tracker.gg/">Tracker Network</a>. sitename will never ask for any of your credentials.</p>    
+                <p class="main-info">rsix.me uses webscrapping to access publicly available data from <a href="https://tracker.gg/">Tracker Network</a>. rsix.me will never ask for any of your credentials.</p>    
                 <p class="main-info"><a href="https://www.ubisoft.com/en-gb/game/rainbow-six/siege">Rainbow Six: Siege</a> is a registered trademark of Ubisoft. Trademarks are the property of their respective owners. Game materials copyright Ubisoft. Ubisoft has nothing to do with this project.</p>
                 <p class="main-info">Operator icons created by <a href="https://github.com/marcopixel">marco.</a></p>
                 <p class="main-info">Loading animation from <a href="https://lottiefiles.com/vinuhegde">here.</a></p>
-                <p class="main-info">If anything on this site belongs to you, please contact me here.</p>
+                <p class="main-info">If anything on this site belongs to you, please contact me <a href="mailto:dzonic25@gmail.com">here.</a></p>
                 <div class="buttons-info">
-                    <button  onclick="history.back()" class="returnbutton" id="returnButton"></button>
+                    <button onclick="smartGoBack()" class="returnbutton" id="returnButton"></button>
                 </div>
                 
        
           
     </div>
    
- 
+ <script>
+ function smartGoBack() {
+    const referrer = document.referrer;
+
+    if (referrer.includes('http://127.0.0.1:5000/')) {
+      history.back();
+    } else {
+      window.location.href = 'http://127.0.0.1:5000/';
+    }
+  }
+</script>
 </body>
 </html>
